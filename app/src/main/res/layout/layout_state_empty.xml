@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/space_xl"
+    android:paddingTop="@dimen/space_xl"
+    android:paddingBottom="@dimen/home_bottom_inset">
+
+    <ImageView
+        android:id="@+id/image_state_empty"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_empty_state"
+        app:tint="?attr/colorPrimary" />
+
+    <TextView
+        android:id="@+id/text_state_empty_title"
+        style="@style/TextAppearance.Medicheck.TitleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_l"
+        android:accessibilityHeading="true"
+        android:gravity="center"
+        android:text="@string/empty_generic_title"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/text_state_empty_subtitle"
+        style="@style/TextAppearance.Medicheck.BodyLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:gravity="center"
+        android:text="@string/empty_generic_subtitle"
+        android:textAlignment="center"
+        android:textColor="?attr/colorOnSurfaceVariant" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_state_empty_cta"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xl"
+        android:minHeight="@dimen/min_touch_target"
+        android:text="@string/add_medication" />
+</LinearLayout>

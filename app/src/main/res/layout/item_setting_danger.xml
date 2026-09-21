@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/space_m"
+    android:paddingTop="@dimen/space_l"
+    android:paddingBottom="@dimen/space_m">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_danger"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/min_touch_target"
+        android:text="@string/settings_logout"
+        android:textColor="?attr/colorOnError"
+        app:backgroundTint="?attr/colorError" />
+</FrameLayout>

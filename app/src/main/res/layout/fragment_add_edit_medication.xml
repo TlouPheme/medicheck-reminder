@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".ui.medications.AddEditMedicationFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_m"
+        android:paddingTop="@dimen/space_m"
+        android:paddingBottom="@dimen/space_xl">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_pill_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/space_m"
+            android:importantForAccessibility="no"
+            android:transitionName="@string/transition_pill_icon"
+            app:cardBackgroundColor="?attr/colorPrimaryContainer"
+            app:cardCornerRadius="32dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <ImageView
+                android:id="@+id/image_pill_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:padding="16dp"
+                android:src="@drawable/ic_pill"
+                app:tint="?attr/colorPrimary" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_name"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/medication_name_label">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:nextFocusForward="@id/et_dosage" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_dosage"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:hint="@string/medication_dosage_label">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_dosage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1"
+                android:nextFocusForward="@id/dropdown_frequency" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_frequency"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:hint="@string/medication_frequency_label">
+
+            <AutoCompleteTextView
+                android:id="@+id/dropdown_frequency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="none"
+                android:nextFocusForward="@id/et_stock" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_days"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                style="@style/TextAppearance.Medicheck.BodyLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:accessibilityHeading="true"
+                android:text="@string/medication_days_label"
+                android:textStyle="bold" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_days"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_s"
+                app:chipSpacing="@dimen/space_s"
+                app:singleSelection="false">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_day_mon"
+                    style="@style/Widget.Medicheck.Chip.Filter"
+                    android:checkable="true"
+                    android:text="@string/day_mon" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_day_tue"
+                    style="@style/Widget.Medicheck.Chip.Filter"
+                    android:checkable="true"
+                    android:text="@string/day_tue" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_day_wed"
+                    style="@style/Widget.Medicheck.Chip.Filter"
+                    android:checkable="true"
+                    android:text="@string/day_wed" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_day_thu"
+                    style="@style/Widget.Medicheck.Chip.Filter"
+                    android:checkable="true"
+                    android:text="@string/day_thu" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_day_fri"
+                    style="@style/Widget.Medicheck.Chip.Filter"
+                    android:checkable="true"
+                    android:text="@string/day_fri" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_day_sat"
+                    style="@style/Widget.Medicheck.Chip.Filter"
+                    android:checkable="true"
+                    android:text="@string/day_sat" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_day_sun"
+                    style="@style/Widget.Medicheck.Chip.Filter"
+                    android:checkable="true"
+                    android:text="@string/day_sun" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/text_days_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorError"
+                android:visibility="gone"
+                tools:text="@string/error_medication_days"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_interval"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:hint="@string/medication_interval_label"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_interval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLines="1"
+                android:nextFocusForward="@id/et_stock" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_times"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.Medicheck.BodyLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:accessibilityHeading="true"
+                android:text="@string/medication_times_label"
+                android:textStyle="bold" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_times"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_s"
+                app:chipSpacing="@dimen/space_s" />
+
+            <TextView
+                android:id="@+id/text_times_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorError"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_time"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_s"
+                android:minHeight="@dimen/min_touch_target"
+                android:text="@string/add_time"
+                app:icon="@drawable/ic_add" />
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_stock"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:hint="@string/medication_stock_label"
+            app:helperTextEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_stock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLines="1"
+                android:nextFocusForward="@id/et_notes" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_notes"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:hint="@string/medication_notes_label">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:imeOptions="actionDone"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="4" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

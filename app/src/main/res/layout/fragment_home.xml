@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:transitionGroup="true">
+
+    <com.example.medicheckreminder.ui.widget.StateLayout
+        android:id="@+id/state_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:stateLoadingAnnouncement="@string/home_loading"
+        app:stateLoadingLayout="@layout/layout_home_shimmer">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:paddingBottom="@dimen/home_bottom_inset">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- Visibility is toggled from HomeFragment using HomeUiState.isOffline -->
+                <include
+                    android:id="@+id/layout_offline_banner"
+                    layout="@layout/layout_status_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/screen_gutter"
+                    android:paddingVertical="@dimen/space_m">
+
+                <TextView
+                    android:id="@+id/text_greeting"
+                    style="@style/TextAppearance.Medicheck.HeadlineMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:accessibilityHeading="true"
+                    tools:text="@string/greeting_morning" />
+
+                    <TextView
+                        android:id="@+id/text_date"
+                        style="@style/TextAppearance.Medicheck.BodyMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        tools:text="Monday, September 21" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_l"
+                        app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                        app:cardCornerRadius="@dimen/radius_large"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/space_m">
+
+                            <include
+                                android:id="@+id/layout_progress"
+                                layout="@layout/layout_adherence_progress" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_m"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    style="@style/TextAppearance.Medicheck.TitleMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:accessibilityHeading="true"
+                        android:text="@string/home_daily_adherence" />
+
+                                <TextView
+                                    style="@style/TextAppearance.Medicheck.BodyMedium"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/home_adherence_subtitle"
+                                    android:textColor="?attr/colorOnSurfaceVariant" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        style="@style/TextAppearance.Medicheck.TitleMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_xl"
+                        android:accessibilityHeading="true"
+                        android:text="@string/home_todays_doses" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_doses"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_dose_card" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </com.example.medicheckreminder.ui.widget.StateLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

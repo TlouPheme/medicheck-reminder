@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/nav_home" />
+    <item
+        android:id="@+id/medicationsListFragment"
+        android:icon="@drawable/ic_pill"
+        android:title="@string/nav_medications" />
+    <item
+        android:id="@+id/healthMeasurementsFragment"
+        android:icon="@drawable/ic_health"
+        android:title="@string/nav_health" />
+    <item
+        android:id="@+id/historyFragment"
+        android:icon="@drawable/ic_calendar"
+        android:title="@string/nav_history" />
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/nav_settings" />
+</menu>

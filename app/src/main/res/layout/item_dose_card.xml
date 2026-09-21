@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/screen_gutter"
+    android:layout_marginVertical="@dimen/space_s"
+    android:clickable="false"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:minHeight="@dimen/min_touch_target"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="@dimen/radius_medium"
+    app:cardElevation="0dp"
+    app:strokeColor="?attr/colorOutlineVariant"
+    app:strokeWidth="1dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_m">
+
+            <TextView
+                android:id="@+id/text_medication_name"
+                style="@style/TextAppearance.Medicheck.TitleMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="@string/medication_name_label" />
+
+            <TextView
+                android:id="@+id/text_dosage"
+                style="@style/TextAppearance.Medicheck.BodyMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                tools:text="100mg (1 pill)" />
+
+            <TextView
+                android:id="@+id/text_scheduled_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:textAppearance="?attr/textAppearanceLabelLarge"
+                android:textColor="?attr/colorPrimary"
+                tools:text="Scheduled for 08:00" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/space_m" />
+
+            <LinearLayout
+                android:id="@+id/layout_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_skip"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="@dimen/min_touch_target"
+                    android:layout_height="@dimen/min_touch_target"
+                    android:contentDescription="@string/action_skip"
+                    android:focusable="true"
+                    app:icon="@drawable/ic_skip" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_snooze"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="@dimen/min_touch_target"
+                    android:layout_height="@dimen/min_touch_target"
+                    android:layout_marginStart="@dimen/space_xs"
+                    android:contentDescription="@string/action_snooze"
+                    android:focusable="true"
+                    app:icon="@drawable/ic_snooze" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_taken"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_s"
+                    android:focusable="true"
+                    android:minHeight="@dimen/min_touch_target"
+                    android:minWidth="@dimen/min_touch_target"
+                    android:text="@string/action_taken"
+                    app:icon="@drawable/ic_check" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</com.google.android.material.card.MaterialCardView>

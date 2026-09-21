@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing tokens -->
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_s">8dp</dimen>
+    <dimen name="space_m">16dp</dimen>
+    <dimen name="space_l">24dp</dimen>
+    <dimen name="space_xl">32dp</dimen>
+    <dimen name="screen_gutter">16dp</dimen>
+
+    <!-- Touch targets -->
+    <dimen name="min_touch_target">48dp</dimen>
+
+    <!-- Corner Radius -->
+    <dimen name="radius_medium">12dp</dimen>
+    <dimen name="radius_large">16dp</dimen>
+
+    <dimen name="bottom_nav_icon_size">20dp</dimen>
+    <!-- Clears the icon-only bottom bar, including space added for the system nav -->
+    <dimen name="home_bottom_inset">112dp</dimen>
+    <dimen name="calendar_grid_height">312dp</dimen>
+    <dimen name="health_chart_height">220dp</dimen>
+</resources>

@@ -2,10 +2,10 @@
     <string name="app_name">MediCheck Reminder</string>
     <string name="login_headline">Welcome back</string>
     <string name="login_subtitle">Sign in to continue</string>
-    <string name="greeting_template">Good day, %1$s</string>
-    <string name="greeting_morning">Good morning, %1$s</string>
-    <string name="greeting_afternoon">Good afternoon, %1$s</string>
-    <string name="greeting_evening">Good evening, %1$s</string>
+    <string name="greeting_template">Good day</string>
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
     <string name="empty_today_doses">No doses scheduled for today</string>
     <string name="empty_today_doses_subtitle">Add a medication and today\'s schedule will appear here.</string>
     <string name="home_daily_adherence">Daily Adherence</string>
@@ -138,13 +138,15 @@
     <string name="history_filter_custom">Custom range</string>
     <string name="history_logs_heading">Doses for %1$s</string>
     <string name="empty_history_title">No doses logged</string>
-    <string name="empty_history_subtitle">There are no dose records for this date.</string>
+    <string name="empty_history_subtitle">There are no dose records for this period.</string>
     <string name="legend_taken">Taken</string>
     <string name="legend_missed">Missed</string>
     <string name="status_taken">Taken</string>
     <string name="status_skipped">Skipped</string>
     <string name="status_snoozed">Snoozed</string>
     <string name="status_pending">Pending</string>
+    <string name="status_missed">Missed</string>
+    <string name="history_log_when">%1$s · %2$s</string>
     <string name="export_report">Export Report</string>
     <string name="export_pdf_title">MediCheck adherence report</string>
     <string name="export_pdf_not_ready">PDF export is not implemented yet.</string>
@@ -194,6 +196,14 @@
     <string name="health_value_sugar">%1$d mg/dL</string>
     <string name="error_health_value">Enter a valid number</string>
     <string name="error_health_bp_order">Systolic must be higher than diastolic</string>
+    <string name="health_no_previous">No previous reading</string>
+    <string name="health_change_weight">%1$+.1f kg from last</string>
+    <string name="health_change_bp">%1$+.0f/%2$+.0f mmHg from last</string>
+    <string name="health_change_sugar">%1$+.0f mg/dL from last</string>
+    <string name="health_target_unset">Target range not set</string>
+    <string name="health_target_weight">Target: %1$.0f–%2$.0f kg</string>
+    <string name="health_target_bp">Target: %1$.0f–%2$.0f / %3$.0f–%4$.0f mmHg</string>
+    <string name="health_target_sugar">Target: %1$.0f–%2$.0f mg/dL</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>

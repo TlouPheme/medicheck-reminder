@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="frequency_options">
+        <item>Daily</item>
+        <item>Specific Days</item>
+        <item>Every X Hours</item>
+        <item>As Needed</item>
+    </string-array>
+
+    <string-array name="settings_languages">
+        <item>@string/settings_language_english</item>
+        <item>@string/settings_language_isizulu</item>
+        <item>@string/settings_language_afrikaans</item>
+    </string-array>
+
+    <string-array name="settings_themes">
+        <item>@string/settings_theme_light</item>
+        <item>@string/settings_theme_dark</item>
+        <item>@string/settings_theme_system</item>
+    </string-array>
+</resources>

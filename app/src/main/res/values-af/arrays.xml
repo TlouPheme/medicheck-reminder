@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="frequency_options">
+        <item>Daagliks</item>
+        <item>Spesifieke dae</item>
+        <item>Elke X ure</item>
+        <item>Soos nodig</item>
+    </string-array>
+</resources>

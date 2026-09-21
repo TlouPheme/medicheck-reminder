@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_horizontal"
+    android:minHeight="@dimen/min_touch_target"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/space_xs"
+    android:paddingBottom="@dimen/space_xs">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/bg_selected"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_calendar_day_selected"
+            android:importantForAccessibility="no"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/text_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:importantForAccessibility="no"
+            android:textAppearance="?attr/textAppearanceLabelLarge"
+            tools:text="21" />
+    </FrameLayout>
+
+    <View
+        android:id="@+id/dot_adherence"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/bg_adherence_dot"
+        android:importantForAccessibility="no"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+</LinearLayout>

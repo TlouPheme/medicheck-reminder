@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="frequency_options">
+        <item>Nsuku zonke</item>
+        <item>Izinsuku ezikhethekile</item>
+        <item>Njalo emahoreni angu-X</item>
+        <item>Lapho kudingeka</item>
+    </string-array>
+</resources>

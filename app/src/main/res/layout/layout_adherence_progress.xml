@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress_adherence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/home_daily_adherence"
+        android:max="100"
+        android:progress="0"
+        app:indicatorColor="?attr/colorSecondary"
+        app:indicatorSize="80dp"
+        app:trackColor="?attr/colorSecondaryContainer"
+        app:trackCornerRadius="4dp"
+        app:trackThickness="8dp"
+        tools:progress="75" />
+
+    <TextView
+        android:id="@+id/text_progress_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:importantForAccessibility="no"
+        android:maxLines="1"
+        android:padding="@dimen/space_xs"
+        android:textAppearance="?attr/textAppearanceLabelLarge"
+        android:textStyle="bold"
+        tools:text="75%" />
+
+</FrameLayout>

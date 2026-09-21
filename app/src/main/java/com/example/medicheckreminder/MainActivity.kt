@@ -25,7 +25,9 @@ class MainActivity : AppCompatActivity() {
     private var navigationBarInset = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        installSplashScreen().setOnExitAnimationListener { splashScreen ->
+            splashScreen.remove()
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 

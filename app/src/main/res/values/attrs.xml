@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StateLayout">
+        <!-- Optional skeleton layout. When omitted, a centered spinner is used. -->
+        <attr name="stateLoadingLayout" format="reference" />
+        <attr name="stateLoadingAnnouncement" format="string" />
+        <attr name="stateEmptyIllustration" format="reference" />
+        <attr name="stateErrorIllustration" format="reference" />
+    </declare-styleable>
+</resources>

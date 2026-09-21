@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/space_m"
+    android:paddingTop="@dimen/space_m"
+    android:paddingBottom="@dimen/space_l">
+
+    <TextView
+        android:id="@+id/text_sheet_title"
+        style="@style/TextAppearance.Medicheck.TitleLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_s"
+        android:accessibilityHeading="true"
+        tools:text="@string/medication_name_label" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_edit"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|center_vertical"
+        android:minHeight="@dimen/min_touch_target"
+        android:text="@string/action_edit"
+        app:icon="@drawable/ic_edit" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_delete"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|center_vertical"
+        android:minHeight="@dimen/min_touch_target"
+        android:text="@string/action_delete"
+        android:textColor="?attr/colorError"
+        app:icon="@drawable/ic_delete"
+        app:iconTint="?attr/colorError" />
+</LinearLayout>
