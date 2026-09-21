@@ -228,4 +228,21 @@
     <string name="settings_logout">Meld af</string>
     <string name="settings_logout_title">Meld af?</string>
     <string name="settings_logout_message">Jy sal weer moet aanmeld om jou medikasie te sien.</string>
+    <string name="error_login_failed">E-pos of wagwoord is verkeerd</string>
+    <string name="error_account_exists">\'n Rekening met hierdie e-pos bestaan reeds</string>
+    <string name="error_password_required">Voer jou wagwoord in</string>
+    <string name="forgot_password_subtitle">Voer die e-pos vir hierdie toestel in en kies \'n nuwe wagwoord.</string>
+    <string name="forgot_new_password">Nuwe wagwoord</string>
+    <string name="forgot_password_saved">Wagwoord opgedateer. Meld aan met die nuwe wagwoord.</string>
+    <string name="action_update_password">Dateer wagwoord op</string>
+    <string name="action_back">Terug</string>
+    <string name="notification_channel_doses">Dosisherinnerings</string>
+    <string name="notification_dose_title">Tyd vir jou medikasie</string>
+    <string name="notification_dose_text">%1$s, %2$s om %3$s</string>
+    <string name="notification_escalation_title">Gemiste dosis</string>
+    <string name="notification_escalation_text">%1$s is nie as geneem gemerk nie. %2$s kan opvolg.</string>
+    <string name="notification_escalation_message">\'n Dosis van %1$s is nie as geneem gemerk in MediCheck nie.</string>
+    <string name="notification_action_message">Stuur boodskap aan versorger</string>
+    <string name="notification_action_email">E-pos versorger</string>
+    <string name="export_pdf_failed">Kon nie die PDF-verslag skep nie</string>
 </resources>

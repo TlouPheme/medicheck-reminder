@@ -2,6 +2,8 @@ package com.example.medicheckreminder.ui.health
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.medicheckreminder.MediCheckApp
 import com.example.medicheckreminder.R
 import com.example.medicheckreminder.domain.model.HealthMeasurement
 import com.example.medicheckreminder.domain.model.MeasurementTarget
@@ -9,6 +11,7 @@ import com.example.medicheckreminder.domain.model.MeasurementType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -32,7 +35,8 @@ data class HealthUiState(
 
 class HealthViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val measurements = mutableListOf<HealthMeasurement>()
+    private val repository = (application as MediCheckApp).container.healthRepository
+    private var measurements: List<HealthMeasurement> = emptyList()
 
     private val targets = emptyMap<MeasurementType, MeasurementTarget>()
 
@@ -43,7 +47,12 @@ class HealthViewModel(application: Application) : AndroidViewModel(application) 
     private var chartColors: Pair<Int, Int> = 0 to 0
 
     init {
-        publish()
+        viewModelScope.launch {
+            repository.observeAll().collect { stored ->
+                measurements = stored
+                publish()
+            }
+        }
     }
 
     fun setChartColors(primary: Int, secondary: Int) {
@@ -61,14 +70,17 @@ class HealthViewModel(application: Application) : AndroidViewModel(application) 
         secondaryValue: Float?,
         recordedAtMillis: Long
     ) {
-        measurements += HealthMeasurement(
-            id = UUID.randomUUID().toString(),
-            type = selectedType,
-            value = value,
-            secondaryValue = secondaryValue,
-            recordedAtMillis = recordedAtMillis
-        )
-        publish()
+        viewModelScope.launch {
+            repository.add(
+                HealthMeasurement(
+                    id = UUID.randomUUID().toString(),
+                    type = selectedType,
+                    value = value,
+                    secondaryValue = secondaryValue,
+                    recordedAtMillis = recordedAtMillis
+                )
+            )
+        }
     }
 
     private fun publish() {

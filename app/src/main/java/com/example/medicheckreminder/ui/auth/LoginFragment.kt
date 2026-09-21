@@ -7,11 +7,17 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.medicheckreminder.MediCheckApp
 import com.example.medicheckreminder.R
+import com.example.medicheckreminder.data.repository.AccountResult
 import com.example.medicheckreminder.databinding.FragmentLoginBinding
+import com.example.medicheckreminder.util.PasswordValidator
 import com.google.android.material.color.MaterialColors
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -23,10 +29,37 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         _binding = FragmentLoginBinding.bind(view)
 
         setupFooter()
+        binding.layoutDivider.isVisible = false
+        binding.btnGoogle.isVisible = false
 
         binding.btnLogin.setOnClickListener {
-            // Validation logic would go here
-            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+            val email = binding.etEmail.text?.toString().orEmpty()
+            val password = binding.etPassword.text?.toString().orEmpty()
+            if (!PasswordValidator.validateEmail(email.trim())) {
+                binding.tilEmail.error = getString(R.string.error_invalid_email)
+                return@setOnClickListener
+            }
+            binding.tilEmail.error = null
+            binding.tilPassword.error = null
+            binding.btnLogin.isEnabled = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = (requireContext().applicationContext as MediCheckApp)
+                    .container.accountStore
+                    .login(email, password)
+                if (!isAdded) return@launch
+                binding.btnLogin.isEnabled = true
+                when (result) {
+                    AccountResult.Success ->
+                        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                    is AccountResult.Failure -> {
+                        if (result.messageRes == R.string.error_invalid_email) {
+                            binding.tilEmail.error = getString(result.messageRes)
+                        } else {
+                            binding.tilPassword.error = getString(result.messageRes)
+                        }
+                    }
+                }
+            }
         }
 
         binding.btnForgotPassword.setOnClickListener {

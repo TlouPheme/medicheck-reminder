@@ -2,9 +2,11 @@ package com.example.medicheckreminder.ui.history
 
 import android.graphics.Color
 import android.os.Bundle
+import android.content.Intent
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.core.content.FileProvider
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
@@ -165,10 +167,20 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
             )
         )
         val message = when (result) {
-            is PdfReportExporter.Result.Success -> getString(
-                R.string.export_pdf_success,
-                result.file.name
-            )
+            is PdfReportExporter.Result.Success -> {
+                val uri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "${requireContext().packageName}.fileprovider",
+                    result.file
+                )
+                val share = Intent(Intent.ACTION_SEND).apply {
+                    type = "application/pdf"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                startActivity(Intent.createChooser(share, getString(R.string.export_report)))
+                getString(R.string.export_pdf_success, result.file.name)
+            }
             is PdfReportExporter.Result.Failure -> getString(result.messageRes)
         }
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()

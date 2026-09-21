@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.medicheckreminder.MediCheckApp
 import com.example.medicheckreminder.domain.model.Dose
 import com.example.medicheckreminder.domain.schedule.DoseSchedule
+import com.example.medicheckreminder.reminder.DoseAlarmScheduler
 import com.example.medicheckreminder.ui.history.HistoryDates
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -59,11 +60,25 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.value = _uiState.value.copy(isLoading = false, isOffline = false)
     }
 
-    fun markAsTaken(dose: Dose) = record(dose, Dose.Status.TAKEN)
+    fun markAsTaken(dose: Dose) {
+        DoseAlarmScheduler.clearFollowUps(getApplication(), dose.id)
+        record(dose, Dose.Status.TAKEN)
+    }
 
-    fun markAsSkipped(dose: Dose) = record(dose, Dose.Status.SKIPPED)
+    fun markAsSkipped(dose: Dose) {
+        DoseAlarmScheduler.clearFollowUps(getApplication(), dose.id)
+        record(dose, Dose.Status.SKIPPED)
+    }
 
-    fun snooze(dose: Dose) = record(dose, Dose.Status.SNOOZED)
+    fun snooze(dose: Dose) {
+        val minutes = app.container.settingsRepository.snapshot().snoozeMinutes.coerceAtLeast(1)
+        DoseAlarmScheduler.rememberSnooze(
+            getApplication(),
+            dose.id,
+            System.currentTimeMillis() + minutes * 60_000L
+        )
+        record(dose, Dose.Status.SNOOZED)
+    }
 
     private fun record(dose: Dose, status: Dose.Status) {
         viewModelScope.launch {

@@ -171,8 +171,8 @@
     <string name="health_add_sugar">Engeza ushukela egazini</string>
     <string name="health_hint_weight">Isisindo (kg)</string>
     <string name="health_hint_sugar">Ushukela egazini (mg/dL)</string>
-    <string name="health_hint_systolic">I-systolic</string>
-    <string name="health_hint_diastolic">I-diastolic</string>
+    <string name="health_hint_systolic">Umfutho ophezulu</string>
+    <string name="health_hint_diastolic">Umfutho ophansi</string>
     <string name="health_datetime_label">Usuku nesikhathi</string>
     <string name="health_pick_date">Khetha usuku</string>
     <string name="health_pick_time">Khetha isikhathi</string>
@@ -228,4 +228,21 @@
     <string name="settings_logout">Phuma</string>
     <string name="settings_logout_title">Phuma?</string>
     <string name="settings_logout_message">Kuzodingeka ungene futhi ukuze ufike emithini yakho.</string>
+    <string name="error_login_failed">I-imeyili noma iphasiwedi ayilungile</string>
+    <string name="error_account_exists">I-akhawunti nale imeyili isivele ikhona</string>
+    <string name="error_password_required">Faka iphasiwedi yakho</string>
+    <string name="forgot_password_subtitle">Faka i-imeyili yale divayisi bese ukhetha iphasiwedi entsha.</string>
+    <string name="forgot_new_password">Iphasiwedi entsha</string>
+    <string name="forgot_password_saved">Iphasiwedi ibuyekeziwe. Ngena ngephasiwedi entsha.</string>
+    <string name="action_update_password">Buyekeza iphasiwedi</string>
+    <string name="action_back">Emuva</string>
+    <string name="notification_channel_doses">Izikhumbuzi zezithamo</string>
+    <string name="notification_dose_title">Isikhathi somuthi wakho</string>
+    <string name="notification_dose_text">%1$s, %2$s ngo-%3$s</string>
+    <string name="notification_escalation_title">Umthamo ophuthelwe</string>
+    <string name="notification_escalation_text">%1$s awumakiwanga njengokuthathiwe. U-%2$s angalandela.</string>
+    <string name="notification_escalation_message">Umthamo we-%1$s awumakiwanga njengokuthathiwe ku-MediCheck.</string>
+    <string name="notification_action_message">Thumela umyalezo kumnakekeli</string>
+    <string name="notification_action_email">Thumela i-imeyili kumnakekeli</string>
+    <string name="export_pdf_failed">Ayikwazanga ukwakha umbiko we-PDF</string>
 </resources>

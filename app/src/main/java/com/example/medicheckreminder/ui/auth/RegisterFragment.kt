@@ -10,11 +10,15 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.medicheckreminder.MediCheckApp
 import com.example.medicheckreminder.R
+import com.example.medicheckreminder.data.repository.AccountResult
 import com.example.medicheckreminder.databinding.FragmentRegisterBinding
 import com.example.medicheckreminder.util.PasswordValidator
 import com.google.android.material.color.MaterialColors
+import kotlinx.coroutines.launch
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
 
@@ -29,9 +33,30 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         setupPasswordStrength()
 
         binding.btnRegister.setOnClickListener {
-            if (validateInputs()) {
-                // Perform registration logic
-                findNavController().navigate(R.id.action_registerFragment_to_homeFragment)
+            if (!validateInputs()) return@setOnClickListener
+            binding.btnRegister.isEnabled = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = (requireContext().applicationContext as MediCheckApp)
+                    .container.accountStore
+                    .register(
+                        email = binding.etEmail.text?.toString().orEmpty(),
+                        password = binding.etPassword.text?.toString().orEmpty(),
+                        name = binding.etName.text?.toString().orEmpty()
+                    )
+                if (!isAdded) return@launch
+                binding.btnRegister.isEnabled = true
+                when (result) {
+                    AccountResult.Success ->
+                        findNavController().navigate(R.id.action_registerFragment_to_homeFragment)
+                    is AccountResult.Failure -> {
+                        val message = getString(result.messageRes)
+                        if (result.messageRes == R.string.error_weak_password) {
+                            binding.tilPassword.error = message
+                        } else {
+                            binding.tilEmail.error = message
+                        }
+                    }
+                }
             }
         }
     }

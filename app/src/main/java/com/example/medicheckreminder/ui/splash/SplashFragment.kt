@@ -15,7 +15,15 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         viewLifecycleOwner.lifecycleScope.launch {
             delay(1500)
             if (!isAdded) return@launch
-            findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+            findNavController().navigate(
+                if ((requireContext().applicationContext as com.example.medicheckreminder.MediCheckApp)
+                        .container.accountStore.hasSession()
+                ) {
+                    R.id.action_splashFragment_to_homeFragment
+                } else {
+                    R.id.action_splashFragment_to_loginFragment
+                }
+            )
         }
     }
 }

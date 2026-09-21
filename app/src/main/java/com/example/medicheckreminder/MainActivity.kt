@@ -1,9 +1,12 @@
 package com.example.medicheckreminder
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
@@ -24,6 +27,10 @@ class MainActivity : AppCompatActivity() {
     private var statusBarInset = 0
     private var navigationBarInset = 0
 
+    private val notificationPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().setOnExitAnimationListener { splashScreen ->
             splashScreen.remove()
@@ -33,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        requestNotificationPermission()
 
         setSupportActionBar(binding.toolbar)
 
@@ -71,6 +79,14 @@ class MainActivity : AppCompatActivity() {
      * Keep the toolbar and page content below the camera cutout, and keep the
      * bottom bar above the system navigation area.
      */
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        val enabled = (application as MediCheckApp).container.settingsRepository
+            .snapshot().notificationsEnabled
+        if (!enabled) return
+        notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
     private fun applyWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { _, insets ->
             val bars = insets.getInsets(

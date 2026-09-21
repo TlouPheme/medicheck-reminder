@@ -7,6 +7,16 @@ import com.example.medicheckreminder.domain.model.Medication
 import java.util.Calendar
 import java.util.Locale
 
+data class ScheduledDose(
+    val id: String,
+    val medicationId: String,
+    val medicationName: String,
+    val dosage: String,
+    val scheduledTime: String,
+    val dateKey: String,
+    val triggerAtMillis: Long
+)
+
 object DoseSchedule {
 
     fun dosesForDay(
@@ -75,6 +85,54 @@ object DoseSchedule {
     }
 
     private fun medicationIdOf(logId: String): String = logId.substringBefore("|")
+
+    fun upcoming(
+        medications: List<Medication>,
+        nowMillis: Long,
+        horizonMillis: Long
+    ): List<ScheduledDose> {
+        val start = Calendar.getInstance().apply {
+            timeInMillis = nowMillis
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val horizonEnd = nowMillis + horizonMillis
+        val doses = mutableListOf<ScheduledDose>()
+        while (start.timeInMillis <= horizonEnd) {
+            val key = dateKey(start)
+            medications.forEach { medication ->
+                if (key < createdOnKey(medication) || !occursOn(medication, start)) return@forEach
+                scheduledTimes(medication).forEach { time ->
+                    val trigger = atTime(start, time) ?: return@forEach
+                    if (trigger in (nowMillis + 1_000)..horizonEnd) {
+                        doses += ScheduledDose(
+                            id = logId(medication.id, key, time),
+                            medicationId = medication.id,
+                            medicationName = medication.name,
+                            dosage = medication.dosage,
+                            scheduledTime = time,
+                            dateKey = key,
+                            triggerAtMillis = trigger
+                        )
+                    }
+                }
+            }
+            start.add(Calendar.DAY_OF_YEAR, 1)
+        }
+        return doses
+    }
+
+    private fun atTime(day: Calendar, time: String): Long? {
+        val minutes = parseMinutes(time) ?: return null
+        return (day.clone() as Calendar).apply {
+            set(Calendar.HOUR_OF_DAY, minutes / 60)
+            set(Calendar.MINUTE, minutes % 60)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+    }
 
     /** Days before the medication was added are not scheduled, so they are not missed. */
     private fun createdOnKey(medication: Medication): String {

@@ -244,4 +244,21 @@
     <string name="settings_logout">Log out</string>
     <string name="settings_logout_title">Log out?</string>
     <string name="settings_logout_message">You will need to sign in again to access your medications.</string>
+    <string name="error_login_failed">Email or password is incorrect</string>
+    <string name="error_account_exists">An account with this email already exists</string>
+    <string name="error_password_required">Enter your password</string>
+    <string name="forgot_password_subtitle">Enter the email for this device and choose a new password.</string>
+    <string name="forgot_new_password">New password</string>
+    <string name="forgot_password_saved">Password updated. Sign in with the new password.</string>
+    <string name="action_update_password">Update password</string>
+    <string name="action_back">Back</string>
+    <string name="notification_channel_doses">Dose reminders</string>
+    <string name="notification_dose_title">Time for your medication</string>
+    <string name="notification_dose_text">%1$s, %2$s at %3$s</string>
+    <string name="notification_escalation_title">Missed dose</string>
+    <string name="notification_escalation_text">%1$s was not marked as taken. %2$s can follow up.</string>
+    <string name="notification_escalation_message">A dose of %1$s was not marked as taken in MediCheck.</string>
+    <string name="notification_action_message">Message caregiver</string>
+    <string name="notification_action_email">Email caregiver</string>
+    <string name="export_pdf_failed">Could not create the PDF report</string>
 </resources>

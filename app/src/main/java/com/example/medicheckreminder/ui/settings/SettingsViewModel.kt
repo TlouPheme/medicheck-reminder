@@ -16,7 +16,6 @@ import com.example.medicheckreminder.domain.model.AppTheme
 import com.example.medicheckreminder.util.PasswordValidator
 import com.example.medicheckreminder.util.SettingsApplier
 import com.example.medicheckreminder.util.SouthAfricanPhoneValidator
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -115,7 +114,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun logout() {
-        runCatching { FirebaseAuth.getInstance().signOut() }
+        (getApplication<Application>() as MediCheckApp).container.accountStore.signOut()
         _events.tryEmit(SettingsEvent.LoggedOut)
     }
 
