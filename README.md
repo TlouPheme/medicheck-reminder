@@ -9,8 +9,8 @@ A walkthrough of the app is in this demonstration: [MediCheck Reminder demo](htt
 - ST10177726 - Tlou Pheme
 - ST10286000 - Ayanda Rikhotso
 - ST10384687 - Angel Kgafela
-- ST10457083 - Lerato Mojalefa
-- ST10451890 - Hlompho Petja
+- ST10451890 - Lerato Mojalefa
+- ST10457083 - Hlompho Petja
 
 ## Screenshots
 
