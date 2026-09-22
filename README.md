@@ -2,6 +2,8 @@
 
 MediCheck Reminder is an Android app that helps a person take medication on schedule. They add each medication, receive a reminder at the scheduled time, and mark the dose taken, skipped, or snoozed. History shows those outcomes for the last 7 days, the last 30 days, or a custom range. The same app records weight, blood pressure, and blood sugar. The interface is available in English, isiZulu, and Afrikaans.
 
+A walkthrough of the app is in this demonstration: [MediCheck Reminder demo](https://youtu.be/Chz8wPsceyg).
+
 ## Design considerations
 
 Data stays on the phone. Room stores medications, dose logs, and health readings. The account, an email and a password hash, is kept in encrypted preferences. Reminders are scheduled on the device, so a dose alert does not depend on a network connection. A cloud copy is only worth adding later if the record must move to another phone, or if a caregiver should be notified without anyone opening Messages or email.
@@ -22,4 +24,4 @@ Source is hosted at [github.com/TlouPheme/medicheck-reminder](https://github.com
 
 ## GitHub Actions
 
-[`.github/workflows/android.yml`](.github/workflows/android.yml) runs on every push to `main` and on every pull request that targets `main`. The job checks out the repository, installs Temurin JDK 21 and the Android SDK, and runs `./gradlew :app:assembleDebug`. A successful run means the debug app compiled on a clean machine. The result is reported on the commit and on the pull request.
+[`.github/workflows/android.yml`](.github/workflows/android.yml) runs on every push to `main` and on every pull request that targets `main`. The job checks out the repository, sets up Temurin JDK 21, accepts the Android SDK licenses on the runner, installs the API 37 platform, and runs `./gradlew :app:assembleDebug`. A successful run means the debug app compiled on a clean machine. The result is reported on the commit and on the pull request.

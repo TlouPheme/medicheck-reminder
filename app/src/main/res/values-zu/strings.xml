@@ -6,6 +6,7 @@
     <string name="greeting_morning">Sawubona ekuseni</string>
     <string name="greeting_afternoon">Sawubona emini</string>
     <string name="greeting_evening">Sawubona kusihlwa</string>
+    <string name="greeting_named">%1$s, %2$s</string>
     <string name="empty_today_doses">Azikho izithamo ezihleliwe namuhla</string>
     <string name="empty_today_doses_subtitle">Engeza umuthi bese uhlelo lwanamuhla luvela lapha.</string>
     <string name="home_daily_adherence">Ukuthobela kwansuku zonke</string>

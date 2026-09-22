@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +20,7 @@ class SettingsAdapter(
     private val onDropdownClick: (SettingRow.Dropdown) -> Unit,
     private val onToggle: (String, Boolean) -> Unit,
     private val onNavigationClick: (String) -> Unit,
-    private val onTextChanged: (String, String) -> Unit,
+    private val onTextCommitted: (String, String) -> Unit,
     private val onDangerClick: (String) -> Unit
 ) : ListAdapter<SettingRow, RecyclerView.ViewHolder>(DiffCallback) {
 
@@ -152,23 +151,43 @@ class SettingsAdapter(
     inner class TextFieldViewHolder(
         private val binding: ItemSettingTextBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        private var rowId: String = ""
+        private var applying = false
+
         init {
-            binding.input.doAfterTextChanged { text ->
-                val id = binding.root.tag as? String ?: return@doAfterTextChanged
-                if (binding.input.hasFocus()) {
-                    onTextChanged(id, text?.toString().orEmpty())
+            binding.input.setOnFocusChangeListener { _, hasFocus ->
+                if (applying || rowId.isEmpty()) return@setOnFocusChangeListener
+                if (hasFocus) {
+                    showError(null)
+                } else {
+                    onTextCommitted(rowId, binding.input.text?.toString().orEmpty())
                 }
             }
         }
 
         fun bind(item: SettingRow.TextField) {
-            binding.root.tag = item.id
-            binding.layout.hint = item.title
-            binding.input.inputType = item.inputType
-            if (!binding.input.hasFocus() && binding.input.text?.toString() != item.value) {
-                binding.input.setText(item.value)
+            val sameRow = rowId == item.id
+            if (sameRow && binding.input.hasFocus()) return
+            applying = true
+            rowId = item.id
+            binding.input.tag = item.id
+            if (!sameRow) {
+                binding.layout.hint = item.title
+                binding.layout.placeholderText = item.hint.takeUnless { it == item.title }
+                binding.input.inputType = item.inputType
             }
-            binding.layout.error = item.error
+            val current = binding.input.text?.toString().orEmpty()
+            if (current != item.value) {
+                binding.input.setText(item.value)
+                binding.input.setSelection(binding.input.text?.length ?: 0)
+            }
+            showError(item.error)
+            applying = false
+        }
+
+        private fun showError(error: String?) {
+            if (binding.layout.error?.toString() == error) return
+            binding.layout.error = error
         }
     }
 

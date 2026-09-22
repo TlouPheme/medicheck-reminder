@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -19,6 +20,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.medicheckreminder.databinding.ActivityMainBinding
 import com.example.medicheckreminder.ui.motion.NavMotion
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 
 class MainActivity : AppCompatActivity() {
 
@@ -119,7 +121,9 @@ class MainActivity : AppCompatActivity() {
             bottom = if (showBottomNav) 0 else navigationBarInset
         )
         binding.bottomNav.visibility = if (showBottomNav) View.VISIBLE else View.GONE
+        if (showBottomNav) binding.bottomNav.bringIntoView()
         binding.fabAddMedication.visibility = if (showFab) View.VISIBLE else View.GONE
+        if (showFab) binding.fabAddMedication.bringIntoView()
 
         val fabParams = binding.fabAddMedication.layoutParams as ViewGroup.MarginLayoutParams
         fabParams.bottomMargin = if (showBottomNav) {
@@ -128,6 +132,17 @@ class MainActivity : AppCompatActivity() {
             navigationBarInset + resources.getDimensionPixelSize(R.dimen.space_m)
         }
         binding.fabAddMedication.layoutParams = fabParams
+    }
+
+    /**
+     * Scrolling the register form slides bottom views off screen. Showing them
+     * again has to clear that offset, or they stay hidden until the app restarts.
+     */
+    private fun View.bringIntoView() {
+        translationY = 0f
+        val params = layoutParams as? CoordinatorLayout.LayoutParams ?: return
+        val behavior = params.behavior as? HideBottomViewOnScrollBehavior<View> ?: return
+        behavior.slideUp(this, false)
     }
 
     override fun onSupportNavigateUp(): Boolean {

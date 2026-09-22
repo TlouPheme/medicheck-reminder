@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.medicheckreminder.MediCheckApp
 import com.example.medicheckreminder.R
 import com.example.medicheckreminder.databinding.FragmentHomeBinding
 import com.example.medicheckreminder.domain.model.Dose
@@ -124,7 +125,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             in 12..16 -> R.string.greeting_afternoon
             else -> R.string.greeting_evening
         }
-        return getString(greetingRes)
+        val greeting = getString(greetingRes)
+        val name = (requireContext().applicationContext as MediCheckApp)
+            .container.accountStore
+            .displayName()
+        return if (name.isEmpty()) {
+            greeting
+        } else {
+            getString(R.string.greeting_named, greeting, name)
+        }
     }
 
     private fun announceDoseStatus(dose: Dose, statusRes: Int) {

@@ -6,6 +6,7 @@
     <string name="greeting_morning">Good morning</string>
     <string name="greeting_afternoon">Good afternoon</string>
     <string name="greeting_evening">Good evening</string>
+    <string name="greeting_named">%1$s, %2$s</string>
     <string name="empty_today_doses">No doses scheduled for today</string>
     <string name="empty_today_doses_subtitle">Add a medication and today\'s schedule will appear here.</string>
     <string name="home_daily_adherence">Daily Adherence</string>

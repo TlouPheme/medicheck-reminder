@@ -13,6 +13,8 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 class SettingsRepositoryImpl(
@@ -20,6 +22,7 @@ class SettingsRepositoryImpl(
 ) : SettingsRepository {
 
     private val prefs: SharedPreferences = createPrefs(context.applicationContext)
+    private val writeLock = Mutex()
 
     override fun observe(): Flow<AppSettings> = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
@@ -48,7 +51,9 @@ class SettingsRepositoryImpl(
 
     override suspend fun update(transform: (AppSettings) -> AppSettings) {
         withContext(Dispatchers.IO) {
-            write(transform(snapshot()))
+            writeLock.withLock {
+                write(transform(snapshot()))
+            }
         }
     }
 

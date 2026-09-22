@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -52,10 +53,11 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             onDropdownClick = ::showDropdown,
             onToggle = ::onToggle,
             onNavigationClick = viewModel::onRowClicked,
-            onTextChanged = ::onTextChanged,
+            onTextCommitted = ::onTextChanged,
             onDangerClick = { showLogoutConfirm() }
         )
         binding.recyclerSettings.adapter = adapter
+        binding.recyclerSettings.itemAnimator = null
         observeState()
     }
 
@@ -155,8 +157,19 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
+    override fun onPause() {
+        commitFocusedText()
+        super.onPause()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun commitFocusedText() {
+        val focused = _binding?.recyclerSettings?.findFocus() as? EditText ?: return
+        val id = focused.tag as? String ?: return
+        onTextChanged(id, focused.text?.toString().orEmpty())
     }
 }

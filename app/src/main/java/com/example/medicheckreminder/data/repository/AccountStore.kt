@@ -17,6 +17,11 @@ class AccountStore(context: Context) {
 
     fun hasSession(): Boolean = prefs.getBoolean(KEY_SIGNED_IN, false)
 
+    fun displayName(): String {
+        val name = prefs.getString(KEY_NAME, "").orEmpty().trim()
+        return name.substringBefore(' ').trim()
+    }
+
     suspend fun register(email: String, password: String, name: String): AccountResult {
         return withContext(Dispatchers.IO) {
             val normalized = email.trim().lowercase()
