@@ -4,6 +4,20 @@ MediCheck Reminder is an Android app that helps a person take medication on sche
 
 A walkthrough of the app is in this demonstration: [MediCheck Reminder demo](https://youtu.be/Chz8wPsceyg).
 
+## Screenshots
+
+<p>
+  <img src="docs/home.jpg" alt="Home, with the greeting, daily adherence, and today's doses" width="180" />
+  <img src="docs/medications.jpg" alt="Medication cabinet" width="180" />
+  <img src="docs/history.jpg" alt="History calendar for taken and missed doses" width="180" />
+  <img src="docs/settings.jpg" alt="Settings for language, reminders, and the caregiver" width="180" />
+</p>
+<p>
+  <img src="docs/health-weight.jpg" alt="Health screen showing a weight reading" width="180" />
+  <img src="docs/health-blood-pressure.jpg" alt="Health screen showing a blood pressure reading" width="180" />
+  <img src="docs/health-blood-sugar.jpg" alt="Health screen showing a blood sugar reading" width="180" />
+</p>
+
 ## Design considerations
 
 Data stays on the phone. Room stores medications, dose logs, and health readings. The account, an email and a password hash, is kept in encrypted preferences. Reminders are scheduled on the device, so a dose alert does not depend on a network connection. A cloud copy is only worth adding later if the record must move to another phone, or if a caregiver should be notified without anyone opening Messages or email.
