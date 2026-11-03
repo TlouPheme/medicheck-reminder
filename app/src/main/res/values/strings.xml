@@ -262,4 +262,9 @@
     <string name="notification_action_message">Message caregiver</string>
     <string name="notification_action_email">Email caregiver</string>
     <string name="export_pdf_failed">Could not create the PDF report</string>
+
+    <!-- Google sign-in -->
+    <string name="error_google_sign_in">Google sign-in did not work. Try again or use your email.</string>
+    <string name="error_google_no_account">No Google account on this phone. Add one in Settings, or use your email.</string>
+    <string name="error_no_network">No internet connection. Connect and try again.</string>
 </resources>

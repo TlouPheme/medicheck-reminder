@@ -246,4 +246,9 @@
     <string name="notification_action_message">Thumela umyalezo kumnakekeli</string>
     <string name="notification_action_email">Thumela i-imeyili kumnakekeli</string>
     <string name="export_pdf_failed">Ayikwazanga ukwakha umbiko we-PDF</string>
+
+    <!-- Google sign-in -->
+    <string name="error_google_sign_in">Ukungena nge-Google akuphumelelanga. Zama futhi noma usebenzise i-imeyili yakho.</string>
+    <string name="error_google_no_account">Ayikho i-akhawunti ye-Google kule foni. Engeza eyodwa kokuthi Izilungiselelo, noma usebenzise i-imeyili yakho.</string>
+    <string name="error_no_network">Akukho ukuxhumana ne-inthanethi. Xhuma bese uzama futhi.</string>
 </resources>
