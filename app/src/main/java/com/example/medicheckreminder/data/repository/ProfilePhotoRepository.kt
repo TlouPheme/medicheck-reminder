@@ -56,7 +56,7 @@ class ProfilePhotoRepository(
         Log.d(TAG, "Shrunk image to ${bytes.size / 1024} KB")
 
         try {
-            val uid = ensureUid()
+            val uid = requireUid()
             val ref = FirebaseStorage.getInstance().reference.child("$STORAGE_FOLDER/$uid.jpg")
             val metadata = StorageMetadata.Builder().setContentType("image/jpeg").build()
             ref.putBytes(bytes, metadata).awaitResult()
@@ -86,6 +86,9 @@ class ProfilePhotoRepository(
             PhotoResult.Success(url)
         } catch (e: CancellationException) {
             throw e
+        } catch (e: NotSignedInException) {
+            Log.e(TAG, "No Firebase user, so the upload was not attempted", e)
+            PhotoResult.Failure(R.string.error_photo_sign_in)
         } catch (e: IllegalStateException) {
             // FirebaseApp is not initialised (no google-services.json in this build)
             Log.e(TAG, "Firebase is not configured", e)
@@ -122,17 +125,15 @@ class ProfilePhotoRepository(
     }
 
     /**
-     * Storage rules need a signed-in user. SSO / email sign-in (Tlou's work) will normally have one;
-     * otherwise we fall back to an anonymous Firebase user so the upload still works.
-     * Anonymous sign-in must be enabled in the Firebase console.
+     * Storage rules need a signed-in Firebase user. Email and Google sign-in both create one, so the
+     * photo is stored under the same uid as the users/{uid} record. A session that only exists on
+     * this phone (for example a login made while Firebase was unreachable) has no Firebase user, so
+     * the person is asked to sign in again rather than being given an anonymous account.
      */
-    private suspend fun ensureUid(): String {
-        val auth = FirebaseAuth.getInstance()
-        auth.currentUser?.uid?.let { return it }
-        Log.d(TAG, "No Firebase user yet, signing in anonymously")
-        return auth.signInAnonymously().awaitResult().user?.uid
-            ?: throw IOException("Anonymous sign-in returned no user")
-    }
+    private fun requireUid(): String =
+        FirebaseAuth.getInstance().currentUser?.uid ?: throw NotSignedInException()
+
+    private class NotSignedInException : Exception("No Firebase user is signed in")
 
     // ---------------------------------------------------------------------------------------
     // Image reading

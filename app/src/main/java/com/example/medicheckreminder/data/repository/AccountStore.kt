@@ -157,6 +157,10 @@ class AccountStore(context: Context, private val remote: FirebaseAuthGateway) {
             // A different person's password must not unlock this Google account.
             editor.remove(KEY_SALT).remove(KEY_HASH)
         }
+        if (!sameEmail) {
+            // Nor should their profile photo show for the new account.
+            editor.remove(KEY_PHOTO_URL).remove(KEY_PHOTO_VERSION)
+        }
         editor.apply()
     }
 
