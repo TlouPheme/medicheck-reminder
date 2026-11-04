@@ -262,4 +262,31 @@
     <string name="error_google_sign_in">Aanmelding met Google het nie gewerk nie. Probeer weer of gebruik jou e-pos.</string>
     <string name="error_google_no_account">Daar is geen Google-rekening op hierdie foon nie. Voeg een by in Instellings, of gebruik jou e-pos.</string>
     <string name="error_no_network">Geen internetverbinding nie. Koppel en probeer weer.</string>
+    <!-- Offline mode and sync -->
+    <string name="sync_offline">Jy is vanlyn. Veranderinge word op hierdie foon gestoor.</string>
+    <plurals name="sync_offline_pending">
+        <item quantity="one">Jy is vanlyn. %d verandering sal sinkroniseer wanneer jy weer koppel.</item>
+        <item quantity="other">Jy is vanlyn. %d veranderinge sal sinkroniseer wanneer jy weer koppel.</item>
+    </plurals>
+    <plurals name="sync_pending">
+        <item quantity="one">%d verandering wag om te sinkroniseer. Tik om nou te sinkroniseer.</item>
+        <item quantity="other">%d veranderinge wag om te sinkroniseer. Tik om nou te sinkroniseer.</item>
+    </plurals>
+    <string name="sync_in_progress">Sinkroniseer jou data…</string>
+
+    <!-- Refill calculator -->
+    <string name="medication_interaction_label">Notas oor geneesmiddelinteraksies</string>
+    <string name="medication_interaction_helper">Byvoorbeeld, vermy pomelo of moenie saam met ibuprofen neem nie</string>
+    <string name="refill_by">Hervul teen %1$s</string>
+    <plurals name="refill_low">
+        <item quantity="one">%d dag oor, hervul binnekort</item>
+        <item quantity="other">%d dae oor, hervul binnekort</item>
+    </plurals>
+    <string name="refill_channel_name">Hervulherinnerings</string>
+    <string name="refill_notification_title">Tyd om %1$s te hervul</string>
+    <plurals name="refill_notification_text">
+        <item quantity="one">Ongeveer %1$d dag oor. Hervul teen %2$s.</item>
+        <item quantity="other">Ongeveer %1$d dae oor. Hervul teen %2$s.</item>
+    </plurals>
+    <string name="refill_notification_out">%1$s is op. Hervul dit sodat jy nie \'n dosis mis nie.</string>
 </resources>

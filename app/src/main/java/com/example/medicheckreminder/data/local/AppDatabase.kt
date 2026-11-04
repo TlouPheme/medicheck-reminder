@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [MedicationEntity::class, DoseLogEntity::class, HealthMeasurementEntity::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(MedicationConverters::class)

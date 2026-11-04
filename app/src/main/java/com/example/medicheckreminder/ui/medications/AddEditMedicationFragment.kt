@@ -185,6 +185,7 @@ class AddEditMedicationFragment : Fragment(R.layout.fragment_add_edit_medication
         binding.etInterval.setText(state.intervalHours)
         binding.etStock.setText(state.stockCount)
         binding.etNotes.setText(state.notes)
+        binding.etInteractionNotes.setText(state.interactionNotes)
 
         val labels = resources.getStringArray(R.array.frequency_options)
         val index = Frequency.entries.indexOf(state.frequency).coerceAtLeast(0)
@@ -248,7 +249,8 @@ class AddEditMedicationFragment : Fragment(R.layout.fragment_add_edit_medication
             daysOfWeek = state.daysOfWeek,
             intervalHours = binding.etInterval.text?.toString().orEmpty(),
             stockCount = binding.etStock.text?.toString().orEmpty(),
-            notes = binding.etNotes.text?.toString().orEmpty()
+            notes = binding.etNotes.text?.toString().orEmpty(),
+            interactionNotes = binding.etInteractionNotes.text?.toString().orEmpty()
         )
     }
 

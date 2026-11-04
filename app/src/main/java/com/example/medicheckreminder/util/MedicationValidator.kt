@@ -12,7 +12,8 @@ data class MedicationDraft(
     val daysOfWeek: Set<Int>,
     val intervalHours: String,
     val stockCount: String,
-    val notes: String
+    val notes: String,
+    val interactionNotes: String = ""
 )
 
 object MedicationValidator {

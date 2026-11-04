@@ -4,14 +4,19 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.medicheckreminder.MediCheckApp
+import com.example.medicheckreminder.data.sync.SyncState
+import com.example.medicheckreminder.data.sync.SyncStatus
 import com.example.medicheckreminder.domain.model.Dose
 import com.example.medicheckreminder.domain.schedule.DoseSchedule
 import com.example.medicheckreminder.reminder.DoseAlarmScheduler
 import com.example.medicheckreminder.ui.history.HistoryDates
+import com.example.medicheckreminder.worker.SyncScheduler
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -30,6 +35,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(HomeUiState(isLoading = true))
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    /** Offline / syncing indicator (offline mode with sync). */
+    val syncStatus: StateFlow<SyncStatus> = app.container.syncStatusMonitor.status
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SyncStatus(SyncState.SYNCED, 0))
 
     init {
         viewModelScope.launch {
@@ -58,6 +67,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun sync() {
         _uiState.value = _uiState.value.copy(isLoading = false, isOffline = false)
+        SyncScheduler.enqueue(getApplication())
     }
 
     fun markAsTaken(dose: Dose) {

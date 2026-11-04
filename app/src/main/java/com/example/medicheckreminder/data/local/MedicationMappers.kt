@@ -12,7 +12,8 @@ fun MedicationEntity.toDomain(): Medication = Medication(
     daysOfWeek = daysOfWeek.toSet(),
     intervalHours = intervalHours,
     notes = notes,
-    createdAt = createdAt
+    createdAt = createdAt,
+    interactionNotes = interactionNotes
 )
 
 fun Medication.toEntity(pendingSync: Boolean = true): MedicationEntity = MedicationEntity(
@@ -27,5 +28,6 @@ fun Medication.toEntity(pendingSync: Boolean = true): MedicationEntity = Medicat
     notes = notes,
     createdAt = createdAt.takeIf { it > 0L } ?: System.currentTimeMillis(),
     updatedAt = System.currentTimeMillis(),
-    pendingSync = pendingSync
+    pendingSync = pendingSync,
+    interactionNotes = interactionNotes
 )

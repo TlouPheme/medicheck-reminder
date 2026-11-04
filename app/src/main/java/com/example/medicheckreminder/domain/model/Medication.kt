@@ -17,5 +17,7 @@ data class Medication(
     val daysOfWeek: Set<Int> = emptySet(),
     val intervalHours: Int? = null,
     val notes: String = "",
-    val createdAt: Long = 0L
+    val createdAt: Long = 0L,
+    /** Warnings from a pharmacist, e.g. "avoid grapefruit" (refill and safety feature). */
+    val interactionNotes: String = ""
 )

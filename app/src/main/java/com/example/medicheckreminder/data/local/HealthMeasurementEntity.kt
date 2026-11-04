@@ -11,7 +11,9 @@ data class HealthMeasurementEntity(
     val type: String,
     val value: Float,
     val secondaryValue: Float?,
-    val recordedAtMillis: Long
+    val recordedAtMillis: Long,
+    val updatedAt: Long = 0L,
+    val pendingSync: Boolean = true
 )
 
 fun HealthMeasurementEntity.toDomain(): HealthMeasurement = HealthMeasurement(
@@ -27,5 +29,7 @@ fun HealthMeasurement.toEntity(): HealthMeasurementEntity = HealthMeasurementEnt
     type = type.name,
     value = value,
     secondaryValue = secondaryValue,
-    recordedAtMillis = recordedAtMillis
+    recordedAtMillis = recordedAtMillis,
+    updatedAt = System.currentTimeMillis(),
+    pendingSync = true
 )

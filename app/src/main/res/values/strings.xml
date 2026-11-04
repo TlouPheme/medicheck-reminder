@@ -278,4 +278,31 @@
     <string name="error_google_sign_in">Google sign-in did not work. Try again or use your email.</string>
     <string name="error_google_no_account">No Google account on this phone. Add one in Settings, or use your email.</string>
     <string name="error_no_network">No internet connection. Connect and try again.</string>
+    <!-- Offline mode and sync -->
+    <string name="sync_offline">You\'re offline. Changes are saved on this phone.</string>
+    <plurals name="sync_offline_pending">
+        <item quantity="one">You\'re offline. %d change will sync when you reconnect.</item>
+        <item quantity="other">You\'re offline. %d changes will sync when you reconnect.</item>
+    </plurals>
+    <plurals name="sync_pending">
+        <item quantity="one">%d change waiting to sync. Tap to sync now.</item>
+        <item quantity="other">%d changes waiting to sync. Tap to sync now.</item>
+    </plurals>
+    <string name="sync_in_progress">Syncing your data…</string>
+
+    <!-- Refill calculator -->
+    <string name="medication_interaction_label">Drug interaction notes</string>
+    <string name="medication_interaction_helper">For example, avoid grapefruit or do not take with ibuprofen</string>
+    <string name="refill_by">Refill by %1$s</string>
+    <plurals name="refill_low">
+        <item quantity="one">%d day left, refill soon</item>
+        <item quantity="other">%d days left, refill soon</item>
+    </plurals>
+    <string name="refill_channel_name">Refill reminders</string>
+    <string name="refill_notification_title">Time to refill %1$s</string>
+    <plurals name="refill_notification_text">
+        <item quantity="one">About %1$d day left. Refill by %2$s.</item>
+        <item quantity="other">About %1$d days left. Refill by %2$s.</item>
+    </plurals>
+    <string name="refill_notification_out">%1$s has run out. Refill it so you do not miss a dose.</string>
 </resources>

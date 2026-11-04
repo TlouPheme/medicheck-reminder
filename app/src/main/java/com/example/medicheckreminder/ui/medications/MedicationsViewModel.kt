@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.medicheckreminder.MediCheckApp
 import com.example.medicheckreminder.domain.model.Medication
-import com.example.medicheckreminder.worker.SyncScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -71,7 +70,6 @@ class MedicationsViewModel(application: Application) : AndroidViewModel(applicat
     fun delete(medication: Medication) {
         viewModelScope.launch {
             repository.delete(medication.id)
-            SyncScheduler.enqueue(getApplication())
         }
     }
 }
