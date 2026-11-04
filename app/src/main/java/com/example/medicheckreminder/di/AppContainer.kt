@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.medicheckreminder.data.local.AppDatabase
+import com.example.medicheckreminder.data.remote.FirebaseAuthGateway
 import com.example.medicheckreminder.data.repository.AccountStore
 import com.example.medicheckreminder.data.repository.DoseLogRepositoryImpl
 import com.example.medicheckreminder.data.repository.HealthRepositoryImpl
@@ -34,7 +35,9 @@ class AppContainer(context: Context) {
     val healthRepository: HealthRepository =
         HealthRepositoryImpl(database.healthMeasurementDao())
 
-    val accountStore: AccountStore = AccountStore(context)
+    val firebaseAuthGateway: FirebaseAuthGateway = FirebaseAuthGateway(context)
+
+    val accountStore: AccountStore = AccountStore(context, firebaseAuthGateway)
 
     val settingsRepository: SettingsRepository =
         SettingsRepositoryImpl(context)

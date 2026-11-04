@@ -272,4 +272,9 @@
     <string name="error_photo_read">Couldn\'t read that image. Try a different one.</string>
     <string name="error_photo_upload">Upload failed. Check your connection and try again.</string>
     <string name="error_photo_backend">Cloud storage isn\'t available right now.</string>
+
+    <!-- Google sign-in -->
+    <string name="error_google_sign_in">Google sign-in did not work. Try again or use your email.</string>
+    <string name="error_google_no_account">No Google account on this phone. Add one in Settings, or use your email.</string>
+    <string name="error_no_network">No internet connection. Connect and try again.</string>
 </resources>

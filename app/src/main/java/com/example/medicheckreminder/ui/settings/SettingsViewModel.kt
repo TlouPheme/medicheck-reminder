@@ -17,6 +17,7 @@ import com.example.medicheckreminder.data.repository.PhotoResult
 import com.example.medicheckreminder.domain.model.AppLanguage
 import com.example.medicheckreminder.domain.model.AppSettings
 import com.example.medicheckreminder.domain.model.AppTheme
+import com.example.medicheckreminder.ui.auth.GoogleSignInHelper
 import com.example.medicheckreminder.util.PasswordValidator
 import com.example.medicheckreminder.util.SettingsApplier
 import com.example.medicheckreminder.util.SouthAfricanPhoneValidator
@@ -166,7 +167,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun logout() {
-        (getApplication<Application>() as MediCheckApp).container.accountStore.signOut()
+        val app = getApplication<Application>()
+        (app as MediCheckApp).container.accountStore.signOut()
+        viewModelScope.launch { GoogleSignInHelper(app).clearCredentialState() }
         _events.tryEmit(SettingsEvent.LoggedOut)
     }
 
