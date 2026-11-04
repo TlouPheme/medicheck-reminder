@@ -3,6 +3,7 @@ package com.example.medicheckreminder.ui.settings
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import coil.load
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,6 +14,7 @@ import com.example.medicheckreminder.databinding.ItemSettingDropdownBinding
 import com.example.medicheckreminder.databinding.ItemSettingHeaderBinding
 import com.example.medicheckreminder.databinding.ItemSettingInfoBinding
 import com.example.medicheckreminder.databinding.ItemSettingNavigationBinding
+import com.example.medicheckreminder.databinding.ItemSettingProfileBinding
 import com.example.medicheckreminder.databinding.ItemSettingTextBinding
 import com.example.medicheckreminder.databinding.ItemSettingToggleBinding
 
@@ -25,6 +27,7 @@ class SettingsAdapter(
 ) : ListAdapter<SettingRow, RecyclerView.ViewHolder>(DiffCallback) {
 
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
+        is SettingRow.Profile -> TYPE_PROFILE
         is SettingRow.Header -> TYPE_HEADER
         is SettingRow.Dropdown -> TYPE_DROPDOWN
         is SettingRow.Toggle -> TYPE_TOGGLE
@@ -37,6 +40,9 @@ class SettingsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
+            TYPE_PROFILE -> ProfileViewHolder(
+                ItemSettingProfileBinding.inflate(inflater, parent, false)
+            )
             TYPE_HEADER -> HeaderViewHolder(
                 ItemSettingHeaderBinding.inflate(inflater, parent, false)
             )
@@ -64,6 +70,7 @@ class SettingsAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
+            is SettingRow.Profile -> (holder as ProfileViewHolder).bind(item)
             is SettingRow.Header -> (holder as HeaderViewHolder).bind(item)
             is SettingRow.Dropdown -> (holder as DropdownViewHolder).bind(item)
             is SettingRow.Toggle -> (holder as ToggleViewHolder).bind(item)
@@ -71,6 +78,36 @@ class SettingsAdapter(
             is SettingRow.TextField -> (holder as TextFieldViewHolder).bind(item)
             is SettingRow.Info -> (holder as InfoViewHolder).bind(item)
             is SettingRow.DangerButton -> (holder as DangerViewHolder).bind(item)
+        }
+    }
+
+    inner class ProfileViewHolder(
+        private val binding: ItemSettingProfileBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: SettingRow.Profile) {
+            binding.textName.text = item.name
+            binding.textAction.text = item.actionLabel
+            binding.progress.isVisible = item.uploading
+            binding.imageAvatar.alpha = if (item.uploading) 0.4f else 1f
+            binding.root.isEnabled = !item.uploading
+
+            if (item.photoUrl.isNullOrBlank()) {
+                binding.imageAvatar.setImageResource(R.drawable.ic_avatar_placeholder)
+            } else {
+                // Coil caches to disk, so the avatar still shows when the phone is offline.
+                // The version in the cache key forces a reload after the user picks a new photo.
+                val cacheKey = "${item.photoUrl}#${item.photoVersion}"
+                binding.imageAvatar.load(item.photoUrl) {
+                    placeholder(R.drawable.ic_avatar_placeholder)
+                    error(R.drawable.ic_avatar_placeholder)
+                    crossfade(true)
+                    memoryCacheKey(cacheKey)
+                    diskCacheKey(cacheKey)
+                }
+            }
+            binding.root.setOnClickListener {
+                if (!item.uploading) onNavigationClick(item.id)
+            }
         }
     }
 
@@ -210,6 +247,7 @@ class SettingsAdapter(
     }
 
     private companion object {
+        const val TYPE_PROFILE = 7
         const val TYPE_HEADER = 0
         const val TYPE_DROPDOWN = 1
         const val TYPE_TOGGLE = 2

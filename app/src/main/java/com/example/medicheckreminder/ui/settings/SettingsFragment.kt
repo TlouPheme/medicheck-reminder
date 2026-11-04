@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.EditText
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -45,6 +46,13 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         viewModel.setSoundUri(uri?.toString())
     }
 
+    // System photo picker: no storage permission needed (backported to older Android via Play services)
+    private val photoPicker = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) viewModel.onPhotoPicked(uri)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSettingsBinding.bind(view)
@@ -75,6 +83,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                             )
                             is SettingsEvent.OpenUrl -> openUrl(event.url)
                             is SettingsEvent.PickSound -> openSoundPicker(event.currentUri)
+                            SettingsEvent.PickPhoto -> photoPicker.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                            is SettingsEvent.ShowMessage -> _binding?.let {
+                                Snackbar.make(it.root, event.messageRes, Snackbar.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }

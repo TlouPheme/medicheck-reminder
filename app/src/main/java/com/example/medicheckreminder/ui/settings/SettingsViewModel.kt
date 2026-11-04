@@ -2,17 +2,22 @@ package com.example.medicheckreminder.ui.settings
 
 import android.app.Application
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.media.RingtoneManager
 import android.os.Build
 import android.text.InputType
+import android.util.Log
+import androidx.annotation.StringRes
 import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.medicheckreminder.MediCheckApp
 import com.example.medicheckreminder.R
+import com.example.medicheckreminder.data.repository.PhotoResult
 import com.example.medicheckreminder.domain.model.AppLanguage
 import com.example.medicheckreminder.domain.model.AppSettings
 import com.example.medicheckreminder.domain.model.AppTheme
+import com.example.medicheckreminder.ui.auth.GoogleSignInHelper
 import com.example.medicheckreminder.util.PasswordValidator
 import com.example.medicheckreminder.util.SettingsApplier
 import com.example.medicheckreminder.util.SouthAfricanPhoneValidator
@@ -22,17 +27,32 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed class SettingsEvent {
     data object LoggedOut : SettingsEvent()
     data class OpenUrl(val url: String) : SettingsEvent()
     data class PickSound(val currentUri: String) : SettingsEvent()
+    data object PickPhoto : SettingsEvent()
+    data class ShowMessage(@StringRes val messageRes: Int) : SettingsEvent()
 }
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = (application as MediCheckApp).container.settingsRepository
+    private val container = (application as MediCheckApp).container
+    private val repository = container.settingsRepository
+
+    private data class ProfileState(
+        val photoUrl: String?,
+        val photoVersion: Long,
+        val uploading: Boolean = false
+    )
+
+    private val profile = MutableStateFlow(
+        ProfileState(container.accountStore.profilePhotoUrl(), container.accountStore.profilePhotoVersion())
+    )
 
     private val _rows = MutableStateFlow<List<SettingRow>>(emptyList())
     val rows: StateFlow<List<SettingRow>> = _rows.asStateFlow()
@@ -42,8 +62,40 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     init {
         viewModelScope.launch {
-            repository.observe().collect { settings ->
-                _rows.value = buildRows(settings)
+            combine(repository.observe(), profile) { settings, profileState ->
+                buildRows(settings, profileState)
+            }.collect { _rows.value = it }
+        }
+        viewModelScope.launch {
+            // Pick up a photo uploaded from another device (Firestore read)
+            if (container.profilePhotoRepository.refreshFromCloud()) {
+                profile.update {
+                    it.copy(
+                        photoUrl = container.accountStore.profilePhotoUrl(),
+                        photoVersion = container.accountStore.profilePhotoVersion()
+                    )
+                }
+            }
+        }
+    }
+
+    fun onPhotoPicked(uri: Uri) {
+        if (profile.value.uploading) return
+        Log.d(TAG, "Photo picked, starting upload")
+        profile.update { it.copy(uploading = true) }
+        viewModelScope.launch {
+            when (val result = container.profilePhotoRepository.upload(uri)) {
+                is PhotoResult.Success -> {
+                    profile.value = ProfileState(
+                        photoUrl = container.accountStore.profilePhotoUrl(),
+                        photoVersion = container.accountStore.profilePhotoVersion()
+                    )
+                    _events.tryEmit(SettingsEvent.ShowMessage(R.string.settings_photo_uploaded))
+                }
+                is PhotoResult.Failure -> {
+                    profile.update { it.copy(uploading = false) }
+                    _events.tryEmit(SettingsEvent.ShowMessage(result.messageRes))
+                }
             }
         }
     }
@@ -105,6 +157,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun onRowClicked(id: String) {
         when (id) {
+            SettingIds.PROFILE -> _events.tryEmit(SettingsEvent.PickPhoto)
             SettingIds.SOUND -> {
                 val current = repository.snapshot().notificationSoundUri
                 _events.tryEmit(SettingsEvent.PickSound(current))
@@ -114,7 +167,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun logout() {
-        (getApplication<Application>() as MediCheckApp).container.accountStore.signOut()
+        val app = getApplication<Application>()
+        (app as MediCheckApp).container.accountStore.signOut()
+        viewModelScope.launch { GoogleSignInHelper(app).clearCredentialState() }
         _events.tryEmit(SettingsEvent.LoggedOut)
     }
 
@@ -122,7 +177,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch { repository.update(transform) }
     }
 
-    private fun buildRows(settings: AppSettings): List<SettingRow> {
+    private fun buildRows(settings: AppSettings, profileState: ProfileState): List<SettingRow> {
         val app = getApplication<Application>()
         val notificationsOn = settings.notificationsEnabled
         val languageLabels = listOf(
@@ -152,7 +207,21 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             else -> app.getString(R.string.error_invalid_email)
         }
 
+        val displayName = container.accountStore.displayName()
+            .ifBlank { app.getString(R.string.settings_profile_default_name) }
+
         return listOf(
+            SettingRow.Profile(
+                id = SettingIds.PROFILE,
+                name = displayName,
+                photoUrl = profileState.photoUrl,
+                photoVersion = profileState.photoVersion,
+                uploading = profileState.uploading,
+                actionLabel = app.getString(
+                    if (profileState.photoUrl == null) R.string.settings_profile_add_photo
+                    else R.string.settings_profile_change_photo
+                )
+            ),
             SettingRow.Dropdown(
                 id = SettingIds.LANGUAGE,
                 title = app.getString(R.string.settings_language),
@@ -214,7 +283,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 value = settings.caregiverName,
                 hint = app.getString(R.string.settings_caregiver_name),
                 inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PERSON_NAME or
-                    InputType.TYPE_TEXT_FLAG_CAP_WORDS
+                        InputType.TYPE_TEXT_FLAG_CAP_WORDS
             ),
             SettingRow.TextField(
                 id = SettingIds.CAREGIVER_PHONE,
@@ -290,6 +359,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     companion object {
+        private const val TAG = "SettingsVM"
         val SNOOZE_OPTIONS = listOf(5, 10, 15, 30, 60)
     }
 }

@@ -13,3 +13,16 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Kotlin compiler caches
+.kotlin/
+
+# JVM crash dumps
+hs_err_pid*.log
+replay_pid*.log
+
+# Firebase config and signing keys stay out of Git (team rule)
+google-services.json
+*.jks
+*.keystore
+keystore.properties

@@ -47,6 +47,15 @@ sealed class SettingRow {
         val value: String
     ) : SettingRow()
 
+    data class Profile(
+        override val id: String,
+        val name: String,
+        val photoUrl: String?,
+        val photoVersion: Long,
+        val uploading: Boolean,
+        val actionLabel: String
+    ) : SettingRow()
+
     data class DangerButton(
         override val id: String,
         val title: String
@@ -55,6 +64,7 @@ sealed class SettingRow {
 
 object SettingIds {
     const val LANGUAGE = "language"
+    const val PROFILE = "profile"
     const val THEME = "theme"
     const val SECTION_NOTIFICATIONS = "section_notifications"
     const val NOTIFICATIONS = "notifications"
@@ -71,6 +81,7 @@ object SettingIds {
     const val VERSION = "version"
     const val PRIVACY = "privacy"
     const val LOGOUT = "logout"
+
 
     const val SOUND_SILENT = "silent"
     const val PRIVACY_URL = "https://www.medicheck.app/privacy"

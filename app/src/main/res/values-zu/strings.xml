@@ -246,4 +246,20 @@
     <string name="notification_action_message">Thumela umyalezo kumnakekeli</string>
     <string name="notification_action_email">Thumela i-imeyili kumnakekeli</string>
     <string name="export_pdf_failed">Ayikwazanga ukwakha umbiko we-PDF</string>
+
+    <string name="settings_profile_default_name">Iphrofayela yakho</string>
+    <string name="settings_profile_add_photo">Engeza isithombe sephrofayela</string>
+    <string name="settings_profile_change_photo">Shintsha isithombe sephrofayela</string>
+    <string name="settings_profile_photo_description">Isithombe sephrofayela</string>
+    <string name="settings_profile_uploading">Iyalayisha isithombe</string>
+    <string name="settings_photo_uploaded">Isithombe sephrofayela sibuyekeziwe</string>
+    <string name="error_photo_read">Asikwazanga ukufunda lesi sithombe. Zama esinye.</string>
+    <string name="error_photo_upload">Ukulayisha kuhlulekile. Hlola uxhumano lwakho bese uzama futhi.</string>
+    <string name="error_photo_backend">Isitoreji sefu asitholakali okwamanje.</string>
+    <string name="error_photo_sign_in">Phuma bese ungena futhi ukuze ulayishe isithombe.</string>
+
+    <!-- Google sign-in -->
+    <string name="error_google_sign_in">Ukungena nge-Google akuphumelelanga. Zama futhi noma usebenzise i-imeyili yakho.</string>
+    <string name="error_google_no_account">Ayikho i-akhawunti ye-Google kule foni. Engeza eyodwa kokuthi Izilungiselelo, noma usebenzise i-imeyili yakho.</string>
+    <string name="error_no_network">Akukho ukuxhumana ne-inthanethi. Xhuma bese uzama futhi.</string>
 </resources>

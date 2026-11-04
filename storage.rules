@@ -1,0 +1,13 @@
+// Firebase Storage security rules for MediCheck Reminder (paste into Firebase console > Storage > Rules).
+// Each signed-in user may only read and write their own profile picture, JPEG only, max 2 MB.
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /profile_pictures/{uid}.jpg {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if request.auth != null && request.auth.uid == uid
+                   && request.resource.size < 2 * 1024 * 1024
+                   && request.resource.contentType == 'image/jpeg';
+    }
+  }
+}

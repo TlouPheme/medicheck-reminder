@@ -5,10 +5,12 @@ import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.medicheckreminder.data.local.AppDatabase
+import com.example.medicheckreminder.data.remote.FirebaseAuthGateway
 import com.example.medicheckreminder.data.repository.AccountStore
 import com.example.medicheckreminder.data.repository.DoseLogRepositoryImpl
 import com.example.medicheckreminder.data.repository.HealthRepositoryImpl
 import com.example.medicheckreminder.data.repository.MedicationRepositoryImpl
+import com.example.medicheckreminder.data.repository.ProfilePhotoRepository
 import com.example.medicheckreminder.data.repository.SettingsRepositoryImpl
 import com.example.medicheckreminder.domain.repository.DoseLogRepository
 import com.example.medicheckreminder.domain.repository.HealthRepository
@@ -33,10 +35,15 @@ class AppContainer(context: Context) {
     val healthRepository: HealthRepository =
         HealthRepositoryImpl(database.healthMeasurementDao())
 
-    val accountStore: AccountStore = AccountStore(context)
+    val firebaseAuthGateway: FirebaseAuthGateway = FirebaseAuthGateway(context)
+
+    val accountStore: AccountStore = AccountStore(context, firebaseAuthGateway)
 
     val settingsRepository: SettingsRepository =
         SettingsRepositoryImpl(context)
+
+    val profilePhotoRepository: ProfilePhotoRepository =
+        ProfilePhotoRepository(context.applicationContext, accountStore)
 
     private companion object {
         val MIGRATION_2_3 = object : Migration(2, 3) {
