@@ -28,13 +28,14 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5
 
+      # Puts sdkmanager on the PATH and accepts the SDK licenses.
+      # https://github.com/android-actions/setup-android
+      - name: Set up the Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Install the Android SDK platform
-        env:
-          ANDROID_HOME: /usr/local/lib/android/sdk
-          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
         run: |
           chmod +x ./gradlew
-          yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platforms;android-37"
 
       # google-services.json is not committed, so this build has Google sign-in switched off.
