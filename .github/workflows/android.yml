@@ -31,10 +31,11 @@ jobs:
       # Puts sdkmanager on the PATH and accepts the SDK licenses.
       # https://github.com/android-actions/setup-android
       # The default package list includes the retired 'tools' package, so only the platform is named.
+      # compileSdk 37 is published as 'platforms;android-37.0'.
       - name: Set up the Android SDK
         uses: android-actions/setup-android@v3
         with:
-          packages: platforms;android-37
+          packages: platforms;android-37.0
 
       - name: Make Gradle executable
         run: chmod +x ./gradlew
