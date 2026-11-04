@@ -22,6 +22,18 @@ class AccountStore(context: Context) {
         return name.substringBefore(' ').trim()
     }
 
+    fun profilePhotoUrl(): String? = prefs.getString(KEY_PHOTO_URL, null)?.takeIf { it.isNotBlank() }
+
+    /** Changes whenever the photo does, so image caches don't serve a stale avatar. */
+    fun profilePhotoVersion(): Long = prefs.getLong(KEY_PHOTO_VERSION, 0L)
+
+    fun setProfilePhoto(url: String) {
+        prefs.edit()
+            .putString(KEY_PHOTO_URL, url)
+            .putLong(KEY_PHOTO_VERSION, System.currentTimeMillis())
+            .apply()
+    }
+
     suspend fun register(email: String, password: String, name: String): AccountResult {
         return withContext(Dispatchers.IO) {
             val normalized = email.trim().lowercase()
@@ -125,6 +137,8 @@ class AccountStore(context: Context) {
         const val KEY_SALT = "salt"
         const val KEY_HASH = "hash"
         const val KEY_SIGNED_IN = "signed_in"
+        const val KEY_PHOTO_URL = "photo_url"
+        const val KEY_PHOTO_VERSION = "photo_version"
     }
 }
 

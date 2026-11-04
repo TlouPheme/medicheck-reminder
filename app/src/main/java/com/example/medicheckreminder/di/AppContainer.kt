@@ -9,6 +9,7 @@ import com.example.medicheckreminder.data.repository.AccountStore
 import com.example.medicheckreminder.data.repository.DoseLogRepositoryImpl
 import com.example.medicheckreminder.data.repository.HealthRepositoryImpl
 import com.example.medicheckreminder.data.repository.MedicationRepositoryImpl
+import com.example.medicheckreminder.data.repository.ProfilePhotoRepository
 import com.example.medicheckreminder.data.repository.SettingsRepositoryImpl
 import com.example.medicheckreminder.domain.repository.DoseLogRepository
 import com.example.medicheckreminder.domain.repository.HealthRepository
@@ -37,6 +38,9 @@ class AppContainer(context: Context) {
 
     val settingsRepository: SettingsRepository =
         SettingsRepositoryImpl(context)
+
+    val profilePhotoRepository: ProfilePhotoRepository =
+        ProfilePhotoRepository(context.applicationContext, accountStore)
 
     private companion object {
         val MIGRATION_2_3 = object : Migration(2, 3) {
