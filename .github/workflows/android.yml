@@ -30,13 +30,14 @@ jobs:
 
       # Puts sdkmanager on the PATH and accepts the SDK licenses.
       # https://github.com/android-actions/setup-android
+      # The default package list includes the retired 'tools' package, so only the platform is named.
       - name: Set up the Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: platforms;android-37
 
-      - name: Install the Android SDK platform
-        run: |
-          chmod +x ./gradlew
-          sdkmanager "platforms;android-37"
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
 
       # google-services.json is not committed, so this build has Google sign-in switched off.
       - name: Run unit tests
