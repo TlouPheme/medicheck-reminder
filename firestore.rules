@@ -1,0 +1,15 @@
+// Firestore security rules for MediCheck Reminder (paste into Firebase console > Firestore > Rules).
+// Each signed-in user can read and write only their own record and synced data under users/{uid}.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+
+      // medications, doseLogs and health written by the offline sync
+      match /{collection}/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+  }
+}

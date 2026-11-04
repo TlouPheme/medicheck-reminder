@@ -262,4 +262,31 @@
     <string name="error_google_sign_in">Ukungena nge-Google akuphumelelanga. Zama futhi noma usebenzise i-imeyili yakho.</string>
     <string name="error_google_no_account">Ayikho i-akhawunti ye-Google kule foni. Engeza eyodwa kokuthi Izilungiselelo, noma usebenzise i-imeyili yakho.</string>
     <string name="error_no_network">Akukho ukuxhumana ne-inthanethi. Xhuma bese uzama futhi.</string>
+    <!-- Offline mode and sync -->
+    <string name="sync_offline">Awuxhunyiwe ku-inthanethi. Izinguquko zigcinwa kule foni.</string>
+    <plurals name="sync_offline_pending">
+        <item quantity="one">Awuxhunyiwe. Uguquko olu-%d luzovumelaniswa uma uxhuma futhi.</item>
+        <item quantity="other">Awuxhunyiwe. Izinguquko ezingu-%d zizovumelaniswa uma uxhuma futhi.</item>
+    </plurals>
+    <plurals name="sync_pending">
+        <item quantity="one">Uguquko olu-%d lulinde ukuvumelaniswa. Thepha ukuvumelanisa manje.</item>
+        <item quantity="other">Izinguquko ezingu-%d zilinde ukuvumelaniswa. Thepha ukuvumelanisa manje.</item>
+    </plurals>
+    <string name="sync_in_progress">Kuvumelaniswa idatha yakho…</string>
+
+    <!-- Refill calculator -->
+    <string name="medication_interaction_label">Amanothi ngokuxubana kwemithi</string>
+    <string name="medication_interaction_helper">Isibonelo, gwema i-grapefruit noma ungayiphuzi ne-ibuprofen</string>
+    <string name="refill_by">Gcwalisa ngaphambi kuka-%1$s</string>
+    <plurals name="refill_low">
+        <item quantity="one">Kusele usuku olu-%d, gcwalisa maduze</item>
+        <item quantity="other">Kusele izinsuku ezingu-%d, gcwalisa maduze</item>
+    </plurals>
+    <string name="refill_channel_name">Izikhumbuzo zokugcwalisa</string>
+    <string name="refill_notification_title">Sekuyisikhathi sokugcwalisa i-%1$s</string>
+    <plurals name="refill_notification_text">
+        <item quantity="one">Kusele cishe usuku olu-%1$d. Gcwalisa ngaphambi kuka-%2$s.</item>
+        <item quantity="other">Kusele cishe izinsuku ezingu-%1$d. Gcwalisa ngaphambi kuka-%2$s.</item>
+    </plurals>
+    <string name="refill_notification_out">I-%1$s iphelile. Yigcwalise ukuze ungaphuthelwa umthamo.</string>
 </resources>

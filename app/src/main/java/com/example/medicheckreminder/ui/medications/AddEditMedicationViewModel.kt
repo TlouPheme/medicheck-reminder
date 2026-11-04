@@ -8,7 +8,6 @@ import com.example.medicheckreminder.domain.model.Frequency
 import com.example.medicheckreminder.domain.model.Medication
 import com.example.medicheckreminder.util.MedicationDraft
 import com.example.medicheckreminder.util.MedicationValidator
-import com.example.medicheckreminder.worker.SyncScheduler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -30,6 +29,7 @@ data class AddEditUiState(
     val intervalHours: String = "",
     val stockCount: String = "",
     val notes: String = "",
+    val interactionNotes: String = "",
     val errors: MedicationValidator.Result = MedicationValidator.Result(),
     val isSaving: Boolean = false
 )
@@ -81,7 +81,8 @@ class AddEditMedicationViewModel(application: Application) : AndroidViewModel(ap
                 daysOfWeek = existing.daysOfWeek,
                 intervalHours = existing.intervalHours?.toString().orEmpty(),
                 stockCount = existing.stockCount.takeIf { it > 0 }?.toString().orEmpty(),
-                notes = existing.notes
+                notes = existing.notes,
+                interactionNotes = existing.interactionNotes
             )
         }
     }
@@ -146,10 +147,10 @@ class AddEditMedicationViewModel(application: Application) : AndroidViewModel(ap
                         null
                     },
                     notes = merged.notes.trim(),
-                    createdAt = createdAt
+                    createdAt = createdAt,
+                    interactionNotes = merged.interactionNotes.trim()
                 )
             )
-            SyncScheduler.enqueue(getApplication())
             medicationId = id
             _uiState.update { it.copy(isSaving = false, isEditMode = true) }
             _events.emit(AddEditEvent.Saved)
@@ -162,7 +163,6 @@ class AddEditMedicationViewModel(application: Application) : AndroidViewModel(ap
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
             repository.delete(id)
-            SyncScheduler.enqueue(getApplication())
             _events.emit(AddEditEvent.Deleted)
         }
     }

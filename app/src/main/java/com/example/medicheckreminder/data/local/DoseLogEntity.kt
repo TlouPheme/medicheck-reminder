@@ -12,7 +12,9 @@ data class DoseLogEntity(
     val dosage: String,
     val scheduledTime: String,
     val dateKey: String,
-    val status: String
+    val status: String,
+    val updatedAt: Long = 0L,
+    val pendingSync: Boolean = true
 )
 
 fun DoseLogEntity.toDomain(): DoseLog = DoseLog(
@@ -30,5 +32,7 @@ fun Dose.toLogEntity(): DoseLogEntity = DoseLogEntity(
     dosage = dosage,
     scheduledTime = scheduledTime,
     dateKey = dateKey,
-    status = status.name
+    status = status.name,
+    updatedAt = System.currentTimeMillis(),
+    pendingSync = true
 )

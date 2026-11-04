@@ -24,6 +24,7 @@
         android:paddingVertical="@dimen/space_s">
 
         <ImageView
+            android:id="@+id/image_sync_status"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:contentDescription="@null"
@@ -32,6 +33,7 @@
             app:tint="?attr/colorOnSurfaceVariant" />
 
         <TextView
+            android:id="@+id/text_sync_status"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_s"

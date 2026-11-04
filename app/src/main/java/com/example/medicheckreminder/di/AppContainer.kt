@@ -12,6 +12,10 @@ import com.example.medicheckreminder.data.repository.HealthRepositoryImpl
 import com.example.medicheckreminder.data.repository.MedicationRepositoryImpl
 import com.example.medicheckreminder.data.repository.ProfilePhotoRepository
 import com.example.medicheckreminder.data.repository.SettingsRepositoryImpl
+import com.example.medicheckreminder.data.sync.FirestoreSyncEngine
+import com.example.medicheckreminder.data.sync.SyncStatusMonitor
+import com.example.medicheckreminder.reminder.RefillNotifier
+import com.example.medicheckreminder.worker.SyncScheduler
 import com.example.medicheckreminder.domain.repository.DoseLogRepository
 import com.example.medicheckreminder.domain.repository.HealthRepository
 import com.example.medicheckreminder.domain.repository.MedicationRepository
@@ -22,20 +26,45 @@ class AppContainer(context: Context) {
         context.applicationContext,
         AppDatabase::class.java,
         "medicheck.db"
-    ).addMigrations(MIGRATION_2_3, MIGRATION_3_4)
+    ).addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
         .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
 
+    private val appContext = context.applicationContext
+
+    /** Every local write queues a sync; WorkManager runs it once the phone is online. */
+    private val onLocalChange: () -> Unit = { SyncScheduler.enqueue(appContext) }
+
     val medicationRepository: MedicationRepository =
-        MedicationRepositoryImpl(database.medicationDao())
+        MedicationRepositoryImpl(database.medicationDao(), onLocalChange)
 
     val doseLogRepository: DoseLogRepository =
-        DoseLogRepositoryImpl(database.doseLogDao())
+        DoseLogRepositoryImpl(
+            dao = database.doseLogDao(),
+            medicationDao = database.medicationDao(),
+            onLocalChange = onLocalChange,
+            onLowStock = { RefillNotifier.showLowStock(appContext, it) }
+        )
 
     val healthRepository: HealthRepository =
-        HealthRepositoryImpl(database.healthMeasurementDao())
+        HealthRepositoryImpl(database.healthMeasurementDao(), onLocalChange)
 
     val firebaseAuthGateway: FirebaseAuthGateway = FirebaseAuthGateway(context)
+
+    val syncEngine: FirestoreSyncEngine = FirestoreSyncEngine(
+        context = appContext,
+        medicationDao = database.medicationDao(),
+        doseLogDao = database.doseLogDao(),
+        healthDao = database.healthMeasurementDao()
+    )
+
+    val syncStatusMonitor: SyncStatusMonitor = SyncStatusMonitor(
+        context = appContext,
+        medicationDao = database.medicationDao(),
+        doseLogDao = database.doseLogDao(),
+        healthDao = database.healthMeasurementDao(),
+        canSync = { firebaseAuthGateway.isAvailable && firebaseAuthGateway.currentUser != null }
+    )
 
     val accountStore: AccountStore = AccountStore(context, firebaseAuthGateway)
 
@@ -70,6 +99,20 @@ class AppContainer(context: Context) {
                     )
                     """.trimIndent()
                 )
+            }
+        }
+
+        /** Offline sync: timestamps and pending flags on every table, plus refill fields. */
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE medications ADD COLUMN interactionNotes TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE medications ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("UPDATE medications SET pendingSync = 1")
+                db.execSQL("ALTER TABLE dose_logs ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE dose_logs ADD COLUMN pendingSync INTEGER NOT NULL DEFAULT 1")
+                db.execSQL("ALTER TABLE health_measurements ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE health_measurements ADD COLUMN pendingSync INTEGER NOT NULL DEFAULT 1")
+                db.execSQL("UPDATE health_measurements SET updatedAt = recordedAtMillis")
             }
         }
     }

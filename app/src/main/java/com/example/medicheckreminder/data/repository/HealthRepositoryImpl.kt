@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class HealthRepositoryImpl(
-    private val dao: HealthMeasurementDao
+    private val dao: HealthMeasurementDao,
+    private val onLocalChange: () -> Unit = {}
 ) : HealthRepository {
 
     override fun observeAll(): Flow<List<HealthMeasurement>> {
@@ -18,5 +19,6 @@ class HealthRepositoryImpl(
 
     override suspend fun add(measurement: HealthMeasurement) {
         dao.insert(measurement.toEntity())
+        onLocalChange()
     }
 }

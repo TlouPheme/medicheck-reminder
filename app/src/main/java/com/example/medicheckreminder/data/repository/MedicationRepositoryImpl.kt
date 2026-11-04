@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class MedicationRepositoryImpl(
-    private val dao: MedicationDao
+    private val dao: MedicationDao,
+    private val onLocalChange: () -> Unit = {}
 ) : MedicationRepository {
 
     override fun observeAll(): Flow<List<Medication>> {
@@ -17,14 +18,16 @@ class MedicationRepositoryImpl(
     }
 
     override suspend fun getById(id: String): Medication? {
-        return dao.getById(id)?.toDomain()
+        return dao.getById(id)?.takeUnless { it.deleted }?.toDomain()
     }
 
     override suspend fun upsert(medication: Medication) {
         dao.upsert(medication.toEntity(pendingSync = true))
+        onLocalChange()
     }
 
     override suspend fun delete(id: String) {
-        dao.deleteById(id)
+        dao.markDeleted(id, System.currentTimeMillis())
+        onLocalChange()
     }
 }

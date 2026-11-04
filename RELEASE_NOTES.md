@@ -18,8 +18,13 @@ Changes since the Part 2 prototype. Items marked **★ Innovative feature** come
 - Added README sections on sign-in, Firebase setup, the CI workflow, and testing.
 
 ### Offline mode and sync (Lerato)
-- _To be filled in by Lerato._
-- **★ Innovative feature 4:** _name and summary._
+- **★ Offline mode with background sync** (Part 1 innovative feature 1). Medications, dose logs and health readings are saved on the phone first and flagged until they reach Firestore. WorkManager sends them as soon as the phone is back online, even if the app is closed.
+- **Last write wins.** When the phone and Firestore disagree, the copy with the newer `updatedAt` is kept. Deletes made offline also reach Firestore and other phones.
+- **Two-way sync.** Signing in on a new phone pulls that person's data down from Firestore. If a different account signs in, the previous account's local data is cleared so it is never uploaded to the wrong account.
+- **Offline and syncing banner** on Home. It shows when the phone is offline, how many changes are waiting, and when a sync is running; tapping it syncs straight away.
+- **★ Innovative feature 4: Refill calculator** (Part 1 innovative feature 5). Marking a dose Taken lowers the stock, and the pill cabinet shows the refill date, in red once a week or less is left. A refill reminder notification is shown once when the supply drops to seven days, and each medication can hold drug interaction notes.
+- Room database moved to version 5 with a migration that keeps existing data. Firestore security rules were added in `firestore.rules`.
+- Unit tests for the sync decisions, the Firestore mapping, the banner states and the refill calculator.
 
 ### Push notifications (Angel)
 - _To be filled in by Angel._

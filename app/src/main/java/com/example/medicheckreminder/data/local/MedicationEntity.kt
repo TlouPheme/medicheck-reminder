@@ -17,5 +17,8 @@ data class MedicationEntity(
     val notes: String,
     val createdAt: Long,
     val updatedAt: Long,
-    val pendingSync: Boolean
+    val pendingSync: Boolean,
+    val interactionNotes: String = "",
+    /** Kept as a tombstone until the delete reaches Firestore, then removed. */
+    val deleted: Boolean = false
 )

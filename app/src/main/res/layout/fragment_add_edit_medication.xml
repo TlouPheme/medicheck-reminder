@@ -250,6 +250,24 @@
                 android:imeOptions="actionNext"
                 android:inputType="number"
                 android:maxLines="1"
+                android:nextFocusForward="@id/et_interaction_notes" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_interaction_notes"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:hint="@string/medication_interaction_label"
+            app:helperText="@string/medication_interaction_helper">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_interaction_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2"
                 android:nextFocusForward="@id/et_notes" />
         </com.google.android.material.textfield.TextInputLayout>
 

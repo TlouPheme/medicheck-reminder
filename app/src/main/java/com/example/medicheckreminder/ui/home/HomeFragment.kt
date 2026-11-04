@@ -10,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.medicheckreminder.MediCheckApp
 import com.example.medicheckreminder.R
+import com.example.medicheckreminder.data.sync.SyncState
+import com.example.medicheckreminder.data.sync.SyncStatus
 import com.example.medicheckreminder.databinding.FragmentHomeBinding
 import com.example.medicheckreminder.domain.model.Dose
 import com.example.medicheckreminder.ui.widget.ViewState
@@ -69,12 +71,39 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     /**
-     * Offline banner: [HomeUiState.isOffline] drives visibility when there is already
-     * content. A first-load failure uses [ViewState.Error] instead.
+     * Offline / syncing banner. Changes are always saved on the phone first; the banner says
+     * whether they are waiting for a connection, being sent, or (hidden) already in Firestore.
      */
     private fun setupOfflineBanner() {
         binding.layoutOfflineBanner.root.setOnClickListener { viewModel.sync() }
         binding.layoutOfflineBanner.btnSync.setOnClickListener { viewModel.sync() }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.syncStatus.collect(::showSyncStatus)
+            }
+        }
+    }
+
+    private fun showSyncStatus(status: SyncStatus) {
+        val banner = binding.layoutOfflineBanner
+        banner.root.isVisible = status.state != SyncState.SYNCED
+        val message = when (status.state) {
+            SyncState.SYNCED -> return
+            SyncState.OFFLINE -> if (status.pendingCount > 0) {
+                resources.getQuantityString(R.plurals.sync_offline_pending, status.pendingCount, status.pendingCount)
+            } else {
+                getString(R.string.sync_offline)
+            }
+            SyncState.PENDING ->
+                resources.getQuantityString(R.plurals.sync_pending, status.pendingCount, status.pendingCount)
+            SyncState.SYNCING -> getString(R.string.sync_in_progress)
+        }
+        banner.textSyncStatus.text = message
+        banner.root.contentDescription = message
+        banner.imageSyncStatus.setImageResource(
+            if (status.state == SyncState.OFFLINE) R.drawable.ic_cloud_off else R.drawable.ic_sync
+        )
+        banner.btnSync.isVisible = status.state != SyncState.SYNCING
     }
 
     private fun observeUiState() {
@@ -96,8 +125,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     doseAdapter.submitList(state.doses)
                     binding.stateLayout.setState(homeViewState(state))
 
-                    binding.layoutOfflineBanner.root.isVisible =
-                        state.isOffline && state.doses.isNotEmpty()
                 }
             }
         }

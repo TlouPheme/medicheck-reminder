@@ -47,6 +47,28 @@ Sign-in failures are handled without a crash. A cancelled account picker simply 
 3. Enable **Authentication → Google** and **Authentication → Email/Password**, and create a Firestore database.
 4. Download `google-services.json` into `app/`. It is listed in `.gitignore`.
 
+## Offline mode and sync
+
+Every change is saved to Room on the phone first, so the app works the same with no connection. Medications, dose logs and health readings each carry an `updatedAt` time and a `pendingSync` flag. A change made offline stays flagged until it reaches Firestore.
+
+Each change queues a WorkManager job with a network constraint. The job waits until the phone is online, even if the app has been closed, and then runs `FirestoreSyncEngine`. That engine compares every record on the phone with Firestore at `users/{uid}/medications`, `users/{uid}/doseLogs` and `users/{uid}/health`. The conflict rule is **last write wins**: the copy with the newer `updatedAt` is kept, whichever side it is on. Deletes are sent as a `deleted` marker, so a medication removed on one phone is removed on the others. The app reads from Firestore as well as writing to it. Signing in on a new phone pulls the person's data down.
+
+The phone holds one person's data. If a different account signs in, the previous account's local data is cleared before anything is uploaded. A banner on Home shows whether the phone is offline, has changes waiting, or is syncing. Tap it to sync straight away.
+
+The Firestore rules are in [`firestore.rules`](firestore.rules): each user can read and write only `users/{their uid}`.
+
+### Demo steps (offline sync)
+
+1. Sign in, open **Home**, and show that no banner is visible.
+2. Turn on **airplane mode**. The banner says *You're offline. Changes are saved on this phone.*
+3. Add a medication. The banner now counts *1 change will sync when you reconnect*.
+4. Turn airplane mode **off**. The banner shows *Syncing your data…* and then disappears.
+5. In the Firebase console, open **Firestore → users → (your uid) → medications** and show the new document. Its `updatedAt` matches the time it was added offline.
+
+## Refill calculator (user-defined feature 4)
+
+Marking a dose **Taken** takes one from that medication's stock, and changing it back puts one back. From the stock and the schedule, the app works out how many days are left and the date a refill is needed. The pill cabinet card shows *Refill by …*, or turns red once a week or less is left. When the supply first drops to seven days, a **refill reminder** notification is shown once. Each medication can also hold **drug interaction notes** from a pharmacist (for example "avoid grapefruit"), which show on its card. The calculation is in `RefillCalculator` and is covered by unit tests.
+
 ## GitHub
 
 Source is hosted at [github.com/TlouPheme/medicheck-reminder](https://github.com/TlouPheme/medicheck-reminder). `main` is the branch that holds the shared history. Each feature is built on its own branch (for example `feature/sso` or `feature/offline-sync`) and merged through a pull request that another member reviews. A pull request is not merged while the GitHub Actions build is red. The final submitted commit is tagged `v1.0-final-poe`.
@@ -75,6 +97,11 @@ Unit tests live in [`app/src/test`](app/src/test) and run on the JVM:
 | `MedicationValidatorTest` | Add/edit medication rules and days of stock remaining |
 | `DoseScheduleTest` | Daily, specific-day and interval schedules, missed doses |
 | `SouthAfricanPhoneValidatorTest` | Caregiver phone numbers |
+| `SyncResolverTest` | Last-write-wins decisions, offline edits and deletes |
+| `SyncMappersTest` | Room rows to Firestore documents and back |
+| `SyncStatusRulesTest` | The offline / syncing banner |
+| `RefillCalculatorTest` | Days remaining, refill date, low-stock reminder, stock changes |
+| `ImageScalingTest` | Shrinking profile photos before upload |
 
 Run them locally with:
 
