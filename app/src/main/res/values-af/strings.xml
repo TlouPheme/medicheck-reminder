@@ -246,4 +246,14 @@
     <string name="notification_action_message">Stuur boodskap aan versorger</string>
     <string name="notification_action_email">E-pos versorger</string>
     <string name="export_pdf_failed">Kon nie die PDF-verslag skep nie</string>
+
+    <string name="settings_profile_default_name">Jou profiel</string>
+    <string name="settings_profile_add_photo">Voeg profielfoto by</string>
+    <string name="settings_profile_change_photo">Verander profielfoto</string>
+    <string name="settings_profile_photo_description">Profielfoto</string>
+    <string name="settings_profile_uploading">Laai foto op</string>
+    <string name="settings_photo_uploaded">Profielfoto opgedateer</string>
+    <string name="error_photo_read">Kon nie daardie beeld lees nie. Probeer \'n ander een.</string>
+    <string name="error_photo_upload">Oplaai het misluk. Kyk jou verbinding en probeer weer.</string>
+    <string name="error_photo_backend">Wolkberging is tans nie beskikbaar nie.</string>
 </resources>

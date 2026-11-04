@@ -262,4 +262,14 @@
     <string name="notification_action_message">Message caregiver</string>
     <string name="notification_action_email">Email caregiver</string>
     <string name="export_pdf_failed">Could not create the PDF report</string>
+
+    <string name="settings_profile_default_name">Your profile</string>
+    <string name="settings_profile_add_photo">Add profile photo</string>
+    <string name="settings_profile_change_photo">Change profile photo</string>
+    <string name="settings_profile_photo_description">Profile picture</string>
+    <string name="settings_profile_uploading">Uploading photo</string>
+    <string name="settings_photo_uploaded">Profile photo updated</string>
+    <string name="error_photo_read">Couldn\'t read that image. Try a different one.</string>
+    <string name="error_photo_upload">Upload failed. Check your connection and try again.</string>
+    <string name="error_photo_backend">Cloud storage isn\'t available right now.</string>
 </resources>
