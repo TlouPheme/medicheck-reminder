@@ -37,10 +37,21 @@ Changes since the Part 2 prototype. Items marked **★ Innovative feature** come
 - Unit tests for push routing and the alarm rule.
 
 ### Languages, interface and images (Ayanda)
-- _To be filled in by Ayanda._
+- **Profile photo.** A profile row at the top of Settings opens the photo picker. The photo is shrunk on the phone, uploaded to Firebase Storage, and its URL is saved on `users/{uid}` in Firestore (blob storage and NoSQL learning outcomes). Progress, success and error messages are shown. A default avatar follows the light and dark theme.
+- **Themed launcher icon.** A monochrome layer was added to the adaptive launcher icon for Android 13+ themed icons.
+- **Store graphics.** 512 × 512 icon and 1024 × 500 feature graphic.
+- `storage.rules`: each user can read and write only their own JPEG under 2 MB.
+- Profile text in English, isiZulu and Afrikaans, and an `ImageScaling` helper with unit tests.
+- Fixes during review: the upload uses the signed-in Firebase user instead of an anonymous account, the cached photo is cleared when the account changes, and the `<monochrome>` tag typo is corrected.
 
 ### Device testing and Play Store (Hlompho)
-- _To be filled in by Hlompho._
+- **Device testing.** Every feature was tested on a physical OnePlus CPH2669 (Android 16), and the bugs found were logged as GitHub Issues #6–#9.
+- **Fix.** Answered doses on Home now show their status, "✓ Taken" or "Skipped", instead of an empty row (#6).
+- **Signed release.** Upload keystore created and kept out of Git. Signed release AAB and APK, version **3 / 3.0.0**.
+- **Store listing.** Name, short and full description, category, data safety answers, content rating, and phone screenshots.
+- **Privacy policy.** Added at `docs/privacy-policy.md`. The in-app Privacy link now opens it instead of a domain the team does not own.
+- **Video script.** Demo video script covering every feature and the Firebase data.
+- **AI-use write-up.** Added at `docs/ai-use-write-up.md`.
 
 ## Part 2 prototype (baseline)
 

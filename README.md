@@ -2,7 +2,10 @@
 
 MediCheck Reminder is an Android app that helps a person take medication on schedule. They add each medication, receive a reminder at the scheduled time, and mark the dose taken, skipped, or snoozed. History shows those outcomes for the last 7 days, the last 30 days, or a custom range. The same app records weight, blood pressure, and blood sugar. The interface is available in English, isiZulu, and Afrikaans.
 
-A walkthrough of the app is in this demonstration: [MediCheck Reminder demo](https://youtu.be/Chz8wPsceyg).
+Part 3 adds Google sign-in, offline mode with Firestore sync, a refill calculator, push notifications, an escalating full-screen alarm, and a profile photo. It also prepares the app for a Play Store release. Every change since the prototype is listed in [RELEASE_NOTES.md](RELEASE_NOTES.md), and the final version is tagged [`v1.0-final-poe`](https://github.com/TlouPheme/medicheck-reminder/releases/tag/v1.0-final-poe).
+
+- **Part 3 demonstration:** _YouTube link to be added after recording_ (script: [docs/demo-video-script.md](docs/demo-video-script.md))
+- **Part 2 demonstration:** [MediCheck Reminder demo](https://youtu.be/Chz8wPsceyg)
 
 ## Students
 
@@ -18,9 +21,13 @@ A walkthrough of the app is in this demonstration: [MediCheck Reminder demo](htt
 
 ![Health screen showing a weight reading](docs/health-weight.jpg)![Health screen showing a blood pressure reading](docs/health-blood-pressure.jpg)![Health screen showing a blood sugar reading](docs/health-blood-sugar.jpg)
 
+Part 3, captured on a physical phone (OnePlus, Android 16):
+
+<img src="docs/play-store/screenshots/home.png" alt="Home with a taken dose" width="180"> <img src="docs/play-store/screenshots/medications.png" alt="Pill cabinet with refill dates and interaction notes" width="180"> <img src="docs/play-store/screenshots/health.png" alt="Health readings" width="180"> <img src="docs/play-store/screenshots/history.png" alt="History calendar" width="180"> <img src="docs/play-store/screenshots/settings.png" alt="Settings with push and full-screen alarm toggles" width="180">
+
 ## Design considerations
 
-Room stores medications, dose logs, and health readings on the phone. The account, an email and a salted password hash, is kept in encrypted preferences, so email login still works without a connection. Reminders are scheduled on the device, so a dose alert does not depend on a network connection. A cloud copy is only worth adding later if the record must move to another phone, or if a caregiver should be notified without anyone opening Messages or email.
+Room stores medications, dose logs, and health readings on the phone. The account, an email and a salted password hash, is kept in encrypted preferences, so email login still works without a connection. Reminders are scheduled on the device, so a dose alert does not depend on a network connection. Since Part 3, every record is also synced to Cloud Firestore, so it moves with the person to a new phone (see [Offline mode and sync](#offline-mode-and-sync)).
 
 History begins on the day a medication is added. Earlier days are left empty, because the person was not using the app yet and those doses were not missed.
 
@@ -91,6 +98,34 @@ This is Part 1's escalating reminder (FR-INN-01). If a dose reminder is not answ
 1. Add a medication due in two minutes, and lock the phone.
 2. When the reminder appears, ignore it.
 3. Ten minutes later the alarm wakes the screen. Tap **Taken**: the alarm stops, and Home shows the dose as taken.
+
+## Profile photo
+
+Settings has a profile row. Tapping it opens the system photo picker. The chosen photo is shrunk on the phone to at most 512 px, uploaded as a JPEG to Firebase Storage at `profile_pictures/{uid}.jpg`, and its download URL is saved on `users/{uid}` in Firestore. The upload uses the signed-in Firebase user. [`storage.rules`](storage.rules) lets each user read and write only their own photo, as a JPEG under 2 MB.
+
+## Release and Play Store
+
+Release builds are signed with an upload key that is kept **outside** the repository. Gradle reads it from `keystore.properties`, which `.gitignore` excludes. Without that file the release build is unsigned, so CI and other team members can still build. The version is **3 / 3.0.0**.
+
+```bash
+./gradlew :app:bundleRelease
+```
+
+```bash
+./gradlew :app:assembleRelease
+```
+
+The store listing, graphics, data safety answers and screenshots are in [docs/play-store/store-listing.md](docs/play-store/store-listing.md). The privacy policy is [docs/privacy-policy.md](docs/privacy-policy.md), which the app's **Privacy** link opens. The group has no Play Console account, so the app was not uploaded. The signed APK is attached to the [`v1.0-final-poe` release](https://github.com/TlouPheme/medicheck-reminder/releases/tag/v1.0-final-poe).
+
+## Known limitations
+
+- **Profile photo and server-sent pushes need the paid plan.** Firebase Storage and Cloud Functions both require Firebase's Blaze plan. The project is on the free Spark plan, so profile photo upload does not work ([#8](https://github.com/TlouPheme/medicheck-reminder/issues/8)), and pushes are sent from the Firebase console rather than from an app event.
+- **Package name.** Google Play does not accept the `com.example` package name. It has to change before a real upload ([#9](https://github.com/TlouPheme/medicheck-reminder/issues/9)).
+- **Pill icon.** The icon reads as a "no medication" symbol ([#7](https://github.com/TlouPheme/medicheck-reminder/issues/7)).
+
+## Use of AI
+
+How generative AI was used, and how its output was checked, is described in [docs/ai-use-write-up.md](docs/ai-use-write-up.md).
 
 ## GitHub
 
