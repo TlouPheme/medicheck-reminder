@@ -20,6 +20,10 @@ data class AppSettings(
     val vibrationEnabled: Boolean = true,
     val snoozeMinutes: Int = 10,
     val escalationEnabled: Boolean = false,
+    /** Firebase Cloud Messaging pushes (updates and alerts sent to this phone). */
+    val pushEnabled: Boolean = true,
+    /** Unanswered dose reminders become a full-screen alarm after 10 minutes. */
+    val fullScreenAlarmEnabled: Boolean = true,
     val caregiverName: String = "",
     val caregiverPhone: String = "",
     val caregiverEmail: String = ""

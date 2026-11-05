@@ -305,4 +305,14 @@
         <item quantity="other">About %1$d days left. Refill by %2$s.</item>
     </plurals>
     <string name="refill_notification_out">%1$s has run out. Refill it so you do not miss a dose.</string>
+    <!-- Push notifications and full-screen alarm -->
+    <string name="settings_push">Push notifications</string>
+    <string name="settings_push_subtitle">Updates and alerts sent to this phone</string>
+    <string name="settings_full_screen_alarm">Full-screen alarm</string>
+    <string name="settings_full_screen_alarm_subtitle">If a dose is not answered within 10 minutes, show a full-screen alarm</string>
+    <string name="push_channel_name">Updates and alerts</string>
+    <string name="alarm_channel_name">Missed dose alarms</string>
+    <string name="alarm_title">Time for your medication</string>
+    <string name="alarm_details">%1$s, scheduled for %2$s</string>
+    <string name="alarm_notification_text">%1$s has not been taken yet. Tap to answer.</string>
 </resources>

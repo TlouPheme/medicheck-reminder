@@ -1,6 +1,8 @@
 package com.example.medicheckreminder
 
 import android.Manifest
+import android.content.Intent
+import android.util.Log
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -19,6 +21,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.medicheckreminder.databinding.ActivityMainBinding
+import com.example.medicheckreminder.push.PushRoutes
 import com.example.medicheckreminder.ui.motion.NavMotion
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 
@@ -28,6 +31,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private var statusBarInset = 0
     private var navigationBarInset = 0
+
+    /** Screen requested by a tapped notification, opened once the user is past sign-in. */
+    private var pendingScreen: Int? = null
 
     private val notificationPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -73,8 +79,25 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             updateChrome(destination.id)
+            if (destination.id == R.id.homeFragment) openPendingScreen()
         }
         updateChrome(navController.currentDestination?.id)
+        pendingScreen = PushRoutes.destinationFor(intent?.getStringExtra(PushRoutes.EXTRA_SCREEN))
+    }
+
+    /** A notification tapped while the app is already open (push, refill or dose reminder). */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val destination = PushRoutes.destinationFor(intent.getStringExtra(PushRoutes.EXTRA_SCREEN)) ?: return
+        pendingScreen = destination
+        if (navController.currentDestination?.id !in NO_APP_BAR) openPendingScreen()
+    }
+
+    private fun openPendingScreen() {
+        val destination = pendingScreen ?: return
+        pendingScreen = null
+        Log.d("MainActivity", "Opening the screen a notification asked for")
+        binding.bottomNav.selectedItemId = destination
     }
 
     /**

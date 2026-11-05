@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimaryContainer"
+    android:fitsSystemWindows="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/space_xl">
+
+    <ImageView
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_pill"
+        app:tint="?attr/colorOnPrimaryContainer" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_l"
+        android:gravity="center"
+        android:text="@string/alarm_title"
+        android:textAppearance="?attr/textAppearanceTitleLarge"
+        android:textColor="?attr/colorOnPrimaryContainer" />
+
+    <TextView
+        android:id="@+id/text_alarm_medication"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_m"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceDisplaySmall"
+        android:textColor="?attr/colorOnPrimaryContainer"
+        android:textStyle="bold"
+        tools:text="Metformin" />
+
+    <TextView
+        android:id="@+id/text_alarm_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:textColor="?attr/colorOnPrimaryContainer"
+        tools:text="500 mg, scheduled for 08:00" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_alarm_taken"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xl"
+        android:minHeight="64dp"
+        android:text="@string/action_taken"
+        app:icon="@drawable/ic_check" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_alarm_snooze"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:minHeight="56dp"
+        android:text="@string/action_snooze"
+        app:icon="@drawable/ic_snooze" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_alarm_skip"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_s"
+        android:minHeight="@dimen/min_touch_target"
+        android:text="@string/action_skip"
+        android:textColor="?attr/colorOnPrimaryContainer"
+        app:icon="@drawable/ic_skip"
+        app:iconTint="?attr/colorOnPrimaryContainer" />
+</LinearLayout>

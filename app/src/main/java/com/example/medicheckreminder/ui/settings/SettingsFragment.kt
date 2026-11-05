@@ -101,6 +101,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             SettingIds.NOTIFICATIONS -> viewModel.onNotificationsToggled(checked)
             SettingIds.VIBRATION -> viewModel.onVibrationToggled(checked)
             SettingIds.ESCALATION -> viewModel.onEscalationToggled(checked)
+            SettingIds.FULL_SCREEN_ALARM -> viewModel.onFullScreenAlarmToggled(checked)
+            SettingIds.PUSH -> viewModel.onPushToggled(checked)
         }
     }
 

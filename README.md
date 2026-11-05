@@ -69,6 +69,29 @@ The Firestore rules are in [`firestore.rules`](firestore.rules): each user can r
 
 Marking a dose **Taken** takes one from that medication's stock, and changing it back puts one back. From the stock and the schedule, the app works out how many days are left and the date a refill is needed. The pill cabinet card shows *Refill by …*, or turns red once a week or less is left. When the supply first drops to seven days, a **refill reminder** notification is shown once. Each medication can also hold **drug interaction notes** from a pharmacist (for example "avoid grapefruit"), which show on its card. The calculation is in `RefillCalculator` and is covered by unit tests.
 
+## Push notifications
+
+Firebase Cloud Messaging is handled by `MediCheckMessagingService`. After sign-in, the phone's FCM token is added to `users/{uid}.fcmTokens` in Firestore, and it is updated whenever FCM changes it. A push can therefore reach every phone the person uses. On Android 13 and later the app asks for notification permission on first launch. Pushes appear on their own **Updates and alerts** channel. A push can carry a `screen` value (`home`, `medications`, `history`, `health` or `settings`), and tapping it opens that tab. The refill reminder uses the same mechanism to open **Medications**. **Settings → Push notifications** turns pushes off: the phone's token is removed from Firestore and from FCM, so nothing more is delivered. Signing out removes it as well.
+
+Sending a push from a real app event needs a Cloud Function, and Cloud Functions require Firebase's paid Blaze plan, which this project does not use. Pushes are therefore sent from the Firebase console (**Messaging → New campaign → Send test message**), as the brief allows.
+
+### Demo steps (push)
+
+1. Sign in on the phone, then open **Firestore → users → (your uid)** and copy one value from `fcmTokens`.
+2. In the Firebase console, open **Messaging → Create your first campaign → Firebase Notification messages**. Enter a title and text, click **Send test message**, paste the token and click **Test**.
+3. To show tap-to-open, go to **Additional options → Custom data** and add key `screen` with value `medications`. With the app closed, tapping the notification opens the Medications tab.
+4. Turn **Settings → Push notifications** off and send the test again. Nothing arrives, and the token has gone from Firestore.
+
+## Full-screen alarm (user-defined feature 5)
+
+This is Part 1's escalating reminder (FR-INN-01). If a dose reminder is not answered within **10 minutes**, it turns into a **full-screen alarm**. With the phone locked, the alarm wakes the screen and shows over the lock screen. While the phone is in use, it appears as a heads-up alert. The alarm plays the alarm sound, starting quietly and getting louder every two seconds, and vibrates until it is answered. It offers **Taken**, **Snooze** and **Skip**, which work like the notification buttons. Taken also lowers the stock for the refill calculator. Snoozing re-arms the alarm with the next reminder. No alarm rings for a dose that was already answered (`AlarmPolicy`). It can be turned off under **Settings → Full-screen alarm**.
+
+### Demo steps (alarm)
+
+1. Add a medication due in two minutes, and lock the phone.
+2. When the reminder appears, ignore it.
+3. Ten minutes later the alarm wakes the screen. Tap **Taken**: the alarm stops, and Home shows the dose as taken.
+
 ## GitHub
 
 Source is hosted at [github.com/TlouPheme/medicheck-reminder](https://github.com/TlouPheme/medicheck-reminder). `main` is the branch that holds the shared history. Each feature is built on its own branch (for example `feature/sso` or `feature/offline-sync`) and merged through a pull request that another member reviews. A pull request is not merged while the GitHub Actions build is red. The final submitted commit is tagged `v1.0-final-poe`.
@@ -102,6 +125,8 @@ Unit tests live in [`app/src/test`](app/src/test) and run on the JVM:
 | `SyncStatusRulesTest` | The offline / syncing banner |
 | `RefillCalculatorTest` | Days remaining, refill date, low-stock reminder, stock changes |
 | `ImageScalingTest` | Shrinking profile photos before upload |
+| `PushRoutesTest` | Push message parsing and which screen a tap opens |
+| `AlarmPolicyTest` | When the full-screen alarm rings |
 
 Run them locally with:
 

@@ -17,6 +17,7 @@ import com.example.medicheckreminder.data.repository.PhotoResult
 import com.example.medicheckreminder.domain.model.AppLanguage
 import com.example.medicheckreminder.domain.model.AppSettings
 import com.example.medicheckreminder.domain.model.AppTheme
+import com.example.medicheckreminder.push.PushTokenRegistrar
 import com.example.medicheckreminder.ui.auth.GoogleSignInHelper
 import com.example.medicheckreminder.util.PasswordValidator
 import com.example.medicheckreminder.util.SettingsApplier
@@ -128,6 +129,19 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         update { it.copy(escalationEnabled = enabled) }
     }
 
+    fun onFullScreenAlarmToggled(enabled: Boolean) {
+        update { it.copy(fullScreenAlarmEnabled = enabled) }
+    }
+
+    /** Push on/off: switching off removes this phone's token, so FCM stops delivering to it. */
+    fun onPushToggled(enabled: Boolean) {
+        viewModelScope.launch {
+            repository.update { it.copy(pushEnabled = enabled) }
+            val app = getApplication<Application>()
+            if (enabled) PushTokenRegistrar.register(app) else PushTokenRegistrar.unregister(app)
+        }
+    }
+
     fun onSnoozeSelected(index: Int) {
         val minutes = SNOOZE_OPTIONS.getOrNull(index) ?: return
         update { it.copy(snoozeMinutes = minutes) }
@@ -168,9 +182,13 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun logout() {
         val app = getApplication<Application>()
-        (app as MediCheckApp).container.accountStore.signOut()
-        viewModelScope.launch { GoogleSignInHelper(app).clearCredentialState() }
-        _events.tryEmit(SettingsEvent.LoggedOut)
+        viewModelScope.launch {
+            // Remove the token while still signed in, so this phone stops getting the account's pushes.
+            PushTokenRegistrar.unregister(app)
+            (app as MediCheckApp).container.accountStore.signOut()
+            GoogleSignInHelper(app).clearCredentialState()
+            _events.emit(SettingsEvent.LoggedOut)
+        }
     }
 
     private fun update(transform: (AppSettings) -> AppSettings) {
@@ -267,11 +285,24 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 enabled = notificationsOn
             ),
             SettingRow.Toggle(
+                id = SettingIds.FULL_SCREEN_ALARM,
+                title = app.getString(R.string.settings_full_screen_alarm),
+                subtitle = app.getString(R.string.settings_full_screen_alarm_subtitle),
+                checked = settings.fullScreenAlarmEnabled,
+                enabled = notificationsOn
+            ),
+            SettingRow.Toggle(
                 id = SettingIds.ESCALATION,
                 title = app.getString(R.string.settings_escalation),
                 subtitle = app.getString(R.string.settings_escalation_subtitle),
                 checked = settings.escalationEnabled,
                 enabled = notificationsOn
+            ),
+            SettingRow.Toggle(
+                id = SettingIds.PUSH,
+                title = app.getString(R.string.settings_push),
+                subtitle = app.getString(R.string.settings_push_subtitle),
+                checked = settings.pushEnabled
             ),
             SettingRow.Header(
                 id = SettingIds.SECTION_CAREGIVER,

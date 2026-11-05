@@ -72,6 +72,8 @@ object SettingIds {
     const val VIBRATION = "vibration"
     const val SNOOZE = "snooze"
     const val ESCALATION = "escalation"
+    const val FULL_SCREEN_ALARM = "full_screen_alarm"
+    const val PUSH = "push"
     const val SECTION_CAREGIVER = "section_caregiver"
     const val CAREGIVER_NAME = "caregiver_name"
     const val CAREGIVER_PHONE = "caregiver_phone"

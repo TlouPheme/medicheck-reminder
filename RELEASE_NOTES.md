@@ -27,8 +27,14 @@ Changes since the Part 2 prototype. Items marked **★ Innovative feature** come
 - Unit tests for the sync decisions, the Firestore mapping, the banner states and the refill calculator.
 
 ### Push notifications (Angel)
-- _To be filled in by Angel._
-- **★ Innovative feature 5:** _name and summary._
+- **Firebase Cloud Messaging.** `MediCheckMessagingService` receives pushes and shows them on a new **Updates and alerts** channel.
+- **Token on the user record.** Each phone's FCM token is saved to `users/{uid}.fcmTokens` after sign-in and updated when it changes. It is removed on sign-out.
+- **Notification permission.** It is requested on Android 13 and later.
+- **Tap opens the right screen.** A push or notification carrying `screen` opens that tab (home, medications, history, health or settings). The refill reminder opens Medications.
+- **Settings → Push notifications** on/off. Turning it off removes the phone's token from Firestore and FCM.
+- Pushes are sent from the Firebase console's test message. Sending from an app event needs Cloud Functions, which are not on the free plan.
+- **★ Innovative feature 5: Escalating full-screen alarm** (Part 1 FR-INN-01). A dose reminder not answered within 10 minutes becomes a full-screen alarm over the lock screen. Its sound gets louder over time, it vibrates, and it offers Taken, Snooze and Skip. It can be switched off under **Settings → Full-screen alarm**.
+- Unit tests for push routing and the alarm rule.
 
 ### Languages, interface and images (Ayanda)
 - _To be filled in by Ayanda._
