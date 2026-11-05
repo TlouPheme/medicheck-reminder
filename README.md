@@ -6,7 +6,7 @@ MediCheck Reminder is an Android app that helps a person take medication on sche
 
 Part 3 adds Google sign-in, offline mode with Firestore sync, a refill calculator, push notifications, an escalating full-screen alarm, and a profile photo. It also prepares the app for a Play Store release. Every change since the prototype is listed in [RELEASE_NOTES.md](RELEASE_NOTES.md), and the final version is tagged [`v1.0-final-poe`](https://github.com/TlouPheme/medicheck-reminder/releases/tag/v1.0-final-poe).
 
-- **Part 3 demonstration:** _YouTube link to be added after recording_ (script: [docs/demo-video-script.md](docs/demo-video-script.md))
+- **Part 3 demonstration:** [MediCheck Reminder final presentation](https://youtu.be/1JNfmo9q1VU), recorded on a physical phone (script: [docs/demo-video-script.md](docs/demo-video-script.md))
 - **Part 2 demonstration:** [MediCheck Reminder demo](https://youtu.be/Chz8wPsceyg)
 
 ## Students
