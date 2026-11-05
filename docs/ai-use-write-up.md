@@ -14,11 +14,11 @@ Tlou directed the work one request at a time. Claude Code then wrote most of the
 - **Push notifications and the full-screen alarm:** Firebase Cloud Messaging, plus the escalating full-screen alarm (user-defined feature 5).
 - **Fixes to Ayanda's profile-photo branch:** merge conflicts, an icon typo, and the switch from anonymous sign-in to the real Firebase user.
 - **Tooling and release:** the GitHub Actions workflow, 66 JUnit tests, the signed release build, the store listing, the privacy policy, the README and the release notes.
-- **This write-up:** Claude Code drafted it, and the team checked it.
+- **This write-up:** Claude Code drafted it, and Tlou checked it.
 
-Ayanda wrote the profile-photo feature, launcher icon and store graphics herself. _[Ayanda and Lerato: add a sentence each on any AI tools you used and what for.]_
+Ayanda wrote the profile-photo feature, launcher icon and store graphics herself, on her own GitHub account.
 
-Angel and Hlompho could not complete their parts because of slow devices and unreliable internet. Their areas were built through Claude Code on Tlou's GitHub account, so those commits appear under Tlou, not under them.
+Angel and Hlompho could not complete their parts because of slow devices and unreliable internet. Their areas, and Lerato's offline sync and refill calculator, were built through Claude Code on Tlou's GitHub account, so those commits appear under Tlou.
 
 ## How we checked the output
 
