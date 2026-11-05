@@ -289,4 +289,14 @@
         <item quantity="other">Kusele cishe izinsuku ezingu-%1$d. Gcwalisa ngaphambi kuka-%2$s.</item>
     </plurals>
     <string name="refill_notification_out">I-%1$s iphelile. Yigcwalise ukuze ungaphuthelwa umthamo.</string>
+    <!-- Push notifications and full-screen alarm -->
+    <string name="settings_push">Izaziso ezithunyelwayo</string>
+    <string name="settings_push_subtitle">Izibuyekezo nezexwayiso ezithunyelwa kule foni</string>
+    <string name="settings_full_screen_alarm">I-alamu yesikrini esigcwele</string>
+    <string name="settings_full_screen_alarm_subtitle">Uma umthamo ungaphendulwa kungakapheli imizuzu eyi-10, bonisa i-alamu yesikrini esigcwele</string>
+    <string name="push_channel_name">Izibuyekezo nezexwayiso</string>
+    <string name="alarm_channel_name">Ama-alamu emithamo egejiwe</string>
+    <string name="alarm_title">Isikhathi somuthi wakho</string>
+    <string name="alarm_details">%1$s, uhlelelwe u-%2$s</string>
+    <string name="alarm_notification_text">I-%1$s ayikathathwa. Thepha ukuze uphendule.</string>
 </resources>

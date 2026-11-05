@@ -19,6 +19,7 @@ object DoseAlarmScheduler {
     private const val KEY_SCHEDULED = "scheduled"
     private const val KEY_SNOOZES = "snoozes"
     private const val KEY_ESCALATIONS = "escalations"
+    private const val KEY_ALARMS = "alarms"
     private const val HORIZON_MS = 48L * 60L * 60L * 1000L
 
     fun reschedule(
@@ -39,6 +40,7 @@ object DoseAlarmScheduler {
                 .putStringSet(KEY_SCHEDULED, emptySet())
                 .putStringSet(KEY_SNOOZES, emptySet())
                 .putStringSet(KEY_ESCALATIONS, emptySet())
+                .putStringSet(KEY_ALARMS, emptySet())
                 .apply()
             return
         }
@@ -61,6 +63,12 @@ object DoseAlarmScheduler {
             now
         )
         escalations.forEach { (doseId, trigger) -> alarms[escalationKey(doseId)] = trigger }
+        val fullScreen = if (settings.fullScreenAlarmEnabled) {
+            retainFuture(prefs.getStringSet(KEY_ALARMS, emptySet()).orEmpty(), settled, now)
+        } else {
+            emptyList()
+        }
+        fullScreen.forEach { (doseId, trigger) -> alarms[alarmKey(doseId)] = trigger }
 
         alarms.forEach { (key, trigger) ->
             val dose = doseFor(key, medications, logs)
@@ -72,6 +80,7 @@ object DoseAlarmScheduler {
             .putStringSet(KEY_SCHEDULED, alarms.keys.toSet())
             .putStringSet(KEY_SNOOZES, snoozes.map { "${it.first}|${it.second}" }.toSet())
             .putStringSet(KEY_ESCALATIONS, escalations.map { "${it.first}|${it.second}" }.toSet())
+            .putStringSet(KEY_ALARMS, fullScreen.map { "${it.first}|${it.second}" }.toSet())
             .apply()
     }
 
@@ -87,8 +96,20 @@ object DoseAlarmScheduler {
         prefs.edit()
             .putStringSet(KEY_SNOOZES, snoozes)
             .putStringSet(KEY_ESCALATIONS, escalations)
+            .putStringSet(KEY_ALARMS, withoutDose(prefs.getStringSet(KEY_ALARMS, emptySet()).orEmpty(), doseId))
             .apply()
     }
+
+    /** Arms the full-screen alarm for a reminder that has just been shown (feature 5). */
+    fun rememberAlarm(context: Context, doseId: String, triggerAtMillis: Long) {
+        val prefs = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val alarms = withoutDose(prefs.getStringSet(KEY_ALARMS, emptySet()).orEmpty(), doseId) +
+            "$doseId|$triggerAtMillis"
+        prefs.edit().putStringSet(KEY_ALARMS, alarms).apply()
+    }
+
+    private fun withoutDose(stored: Set<String>, doseId: String): Set<String> =
+        stored.filterNot { it.substringBeforeLast("|") == doseId }.toSet()
 
     fun rememberEscalation(context: Context, doseId: String, triggerAtMillis: Long) {
         val prefs = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -114,6 +135,7 @@ object DoseAlarmScheduler {
                     .filterNot { it.substringBeforeLast("|") == doseId }
                     .toSet()
             )
+            .putStringSet(KEY_ALARMS, withoutDose(prefs.getStringSet(KEY_ALARMS, emptySet()).orEmpty(), doseId))
             .apply()
     }
 
@@ -134,7 +156,7 @@ object DoseAlarmScheduler {
         medications: List<Medication>,
         logs: List<DoseLog>
     ): ScheduledDose? {
-        val doseId = key.removeSuffix("|escalate")
+        val doseId = key.removeSuffix("|escalate").removeSuffix("|alarm")
         val parts = doseId.split("|")
         if (parts.size < 3) return null
         val medicationId = parts[0]
@@ -195,9 +217,12 @@ object DoseAlarmScheduler {
         dose: ScheduledDose? = null,
         settings: AppSettings? = null
     ): PendingIntent {
-        val escalate = key.endsWith("|escalate")
         val intent = Intent(context, DoseReminderReceiver::class.java).apply {
-            action = if (escalate) DoseReminderReceiver.ACTION_ESCALATE else DoseReminderReceiver.ACTION_SHOW
+            action = when {
+                key.endsWith("|escalate") -> DoseReminderReceiver.ACTION_ESCALATE
+                key.endsWith("|alarm") -> DoseReminderReceiver.ACTION_ALARM
+                else -> DoseReminderReceiver.ACTION_SHOW
+            }
             data = Uri.parse("medicheck://dose/${Uri.encode(key)}")
             if (dose != null) {
                 putExtra(DoseReminderReceiver.EXTRA_DOSE_ID, dose.id)
@@ -210,6 +235,7 @@ object DoseAlarmScheduler {
             if (settings != null) {
                 putExtra(DoseReminderReceiver.EXTRA_SNOOZE_MINUTES, settings.snoozeMinutes)
                 putExtra(DoseReminderReceiver.EXTRA_ESCALATION, settings.escalationEnabled)
+                putExtra(DoseReminderReceiver.EXTRA_FULL_SCREEN_ALARM, settings.fullScreenAlarmEnabled)
                 putExtra(DoseReminderReceiver.EXTRA_CAREGIVER_NAME, settings.caregiverName)
                 putExtra(DoseReminderReceiver.EXTRA_CAREGIVER_PHONE, settings.caregiverPhone)
                 putExtra(DoseReminderReceiver.EXTRA_CAREGIVER_EMAIL, settings.caregiverEmail)
@@ -226,4 +252,6 @@ object DoseAlarmScheduler {
     }
 
     private fun escalationKey(doseId: String) = "$doseId|escalate"
+
+    private fun alarmKey(doseId: String) = "$doseId|alarm"
 }

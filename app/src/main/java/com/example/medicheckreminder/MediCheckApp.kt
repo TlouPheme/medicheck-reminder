@@ -2,6 +2,8 @@ package com.example.medicheckreminder
 
 import android.app.Application
 import com.example.medicheckreminder.di.AppContainer
+import com.example.medicheckreminder.push.MediCheckMessagingService
+import com.example.medicheckreminder.push.PushTokenRegistrar
 import com.example.medicheckreminder.reminder.DoseAlarmScheduler
 import com.example.medicheckreminder.util.SettingsApplier
 import com.example.medicheckreminder.worker.SyncScheduler
@@ -25,6 +27,7 @@ class MediCheckApp : Application() {
         SettingsApplier.applyTheme(settings.theme)
         SettingsApplier.applyLanguage(settings.language)
         startSync()
+        MediCheckMessagingService.ensureChannel(this)
         appScope.launch {
             combine(
                 container.medicationRepository.observeAll(),
@@ -51,7 +54,10 @@ class MediCheckApp : Application() {
         SyncScheduler.enqueue(this)
         if (container.firebaseAuthGateway.isAvailable) {
             FirebaseAuth.getInstance().addAuthStateListener { auth ->
-                if (auth.currentUser != null) SyncScheduler.enqueue(this)
+                if (auth.currentUser != null) {
+                    SyncScheduler.enqueue(this)
+                    appScope.launch { PushTokenRegistrar.register(this@MediCheckApp) }
+                }
             }
         }
     }

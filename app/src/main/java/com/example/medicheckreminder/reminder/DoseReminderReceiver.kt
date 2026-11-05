@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -37,6 +38,13 @@ class DoseReminderReceiver : BroadcastReceiver() {
                         DoseAlarmScheduler.clearFollowUps(app, doseId)
                         record(app, intent, Dose.Status.TAKEN)
                         NotificationManagerCompat.from(app).cancel(doseId.hashCode())
+                        AlarmNotifier.cancel(app, doseId)
+                    }
+                    ACTION_SKIP -> {
+                        DoseAlarmScheduler.clearFollowUps(app, doseId)
+                        record(app, intent, Dose.Status.SKIPPED)
+                        NotificationManagerCompat.from(app).cancel(doseId.hashCode())
+                        AlarmNotifier.cancel(app, doseId)
                     }
                     ACTION_SNOOZE -> {
                         val minutes = intent.getIntExtra(EXTRA_SNOOZE_MINUTES, 10).coerceAtLeast(1)
@@ -47,10 +55,27 @@ class DoseReminderReceiver : BroadcastReceiver() {
                         )
                         record(app, intent, Dose.Status.SNOOZED)
                         NotificationManagerCompat.from(app).cancel(doseId.hashCode())
+                        AlarmNotifier.cancel(app, doseId)
                     }
                     ACTION_ESCALATE -> showEscalation(app, intent, doseId)
+                    ACTION_ALARM -> {
+                        val status = app.container.doseLogRepository.observeAll().first()
+                            .find { it.id == doseId }?.status
+                        if (AlarmPolicy.shouldRing(status)) {
+                            AlarmNotifier.show(app, intent, doseId)
+                        } else {
+                            Log.d(TAG, "Dose already answered ($status); alarm not needed")
+                        }
+                    }
                     else -> {
                         showDose(app, intent, doseId)
+                        if (intent.getBooleanExtra(EXTRA_FULL_SCREEN_ALARM, true)) {
+                            DoseAlarmScheduler.rememberAlarm(
+                                app,
+                                doseId,
+                                AlarmPolicy.alarmAt(System.currentTimeMillis())
+                            )
+                        }
                         if (intent.getBooleanExtra(EXTRA_ESCALATION, false)) {
                             val minutes = intent.getIntExtra(EXTRA_SNOOZE_MINUTES, 10).coerceAtLeast(1)
                             DoseAlarmScheduler.rememberEscalation(
@@ -257,6 +282,10 @@ class DoseReminderReceiver : BroadcastReceiver() {
         const val ACTION_TAKEN = "com.example.medicheckreminder.DOSE_TAKEN"
         const val ACTION_SNOOZE = "com.example.medicheckreminder.DOSE_SNOOZE"
         const val ACTION_ESCALATE = "com.example.medicheckreminder.DOSE_ESCALATE"
+        const val ACTION_ALARM = "com.example.medicheckreminder.DOSE_ALARM"
+        const val ACTION_SKIP = "com.example.medicheckreminder.DOSE_SKIP"
+        const val EXTRA_FULL_SCREEN_ALARM = "full_screen_alarm"
+        private const val TAG = "DoseReminderReceiver"
         const val EXTRA_DOSE_ID = "dose_id"
         const val EXTRA_MEDICATION_ID = "medication_id"
         const val EXTRA_NAME = "name"

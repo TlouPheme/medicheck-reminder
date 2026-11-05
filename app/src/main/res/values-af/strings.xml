@@ -289,4 +289,14 @@
         <item quantity="other">Ongeveer %1$d dae oor. Hervul teen %2$s.</item>
     </plurals>
     <string name="refill_notification_out">%1$s is op. Hervul dit sodat jy nie \'n dosis mis nie.</string>
+    <!-- Push notifications and full-screen alarm -->
+    <string name="settings_push">Stootkennisgewings</string>
+    <string name="settings_push_subtitle">Opdaterings en waarskuwings wat na hierdie foon gestuur word</string>
+    <string name="settings_full_screen_alarm">Volskermalarm</string>
+    <string name="settings_full_screen_alarm_subtitle">As ’n dosis nie binne 10 minute beantwoord word nie, wys ’n volskermalarm</string>
+    <string name="push_channel_name">Opdaterings en waarskuwings</string>
+    <string name="alarm_channel_name">Alarms vir gemiste dosisse</string>
+    <string name="alarm_title">Tyd vir jou medikasie</string>
+    <string name="alarm_details">%1$s, geskeduleer vir %2$s</string>
+    <string name="alarm_notification_text">%1$s is nog nie geneem nie. Tik om te antwoord.</string>
 </resources>

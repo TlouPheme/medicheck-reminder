@@ -44,6 +44,8 @@ class SettingsRepositoryImpl(
         vibrationEnabled = prefs.getBoolean(KEY_VIBRATION, true),
         snoozeMinutes = prefs.getInt(KEY_SNOOZE, 10),
         escalationEnabled = prefs.getBoolean(KEY_ESCALATION, false),
+        pushEnabled = prefs.getBoolean(KEY_PUSH, true),
+        fullScreenAlarmEnabled = prefs.getBoolean(KEY_FULL_SCREEN_ALARM, true),
         caregiverName = prefs.getString(KEY_CAREGIVER_NAME, "").orEmpty(),
         caregiverPhone = prefs.getString(KEY_CAREGIVER_PHONE, "").orEmpty(),
         caregiverEmail = prefs.getString(KEY_CAREGIVER_EMAIL, "").orEmpty()
@@ -66,6 +68,8 @@ class SettingsRepositoryImpl(
             .putBoolean(KEY_VIBRATION, settings.vibrationEnabled)
             .putInt(KEY_SNOOZE, settings.snoozeMinutes)
             .putBoolean(KEY_ESCALATION, settings.escalationEnabled)
+            .putBoolean(KEY_PUSH, settings.pushEnabled)
+            .putBoolean(KEY_FULL_SCREEN_ALARM, settings.fullScreenAlarmEnabled)
             .putString(KEY_CAREGIVER_NAME, settings.caregiverName)
             .putString(KEY_CAREGIVER_PHONE, settings.caregiverPhone)
             .putString(KEY_CAREGIVER_EMAIL, settings.caregiverEmail)
@@ -98,6 +102,8 @@ class SettingsRepositoryImpl(
         const val KEY_VIBRATION = "vibration_enabled"
         const val KEY_SNOOZE = "snooze_minutes"
         const val KEY_ESCALATION = "escalation_enabled"
+        const val KEY_PUSH = "push_enabled"
+        const val KEY_FULL_SCREEN_ALARM = "full_screen_alarm_enabled"
         const val KEY_CAREGIVER_NAME = "caregiver_name"
         const val KEY_CAREGIVER_PHONE = "caregiver_phone"
         const val KEY_CAREGIVER_EMAIL = "caregiver_email"

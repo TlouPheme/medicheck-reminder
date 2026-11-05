@@ -16,6 +16,7 @@ import com.example.medicheckreminder.MainActivity
 import com.example.medicheckreminder.R
 import com.example.medicheckreminder.domain.model.Medication
 import com.example.medicheckreminder.domain.refill.RefillCalculator
+import com.example.medicheckreminder.push.PushRoutes
 import java.text.DateFormat
 import java.util.Date
 
@@ -79,6 +80,7 @@ object RefillNotifier {
     private fun openApp(context: Context): PendingIntent {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra(PushRoutes.EXTRA_SCREEN, PushRoutes.MEDICATIONS)
         }
         return PendingIntent.getActivity(
             context,
