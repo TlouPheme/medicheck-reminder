@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import com.google.android.material.color.MaterialColors
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -105,6 +106,25 @@ class DoseAdapter(
                 Dose.Status.PENDING -> R.string.status_pending
                 Dose.Status.MISSED -> R.string.status_missed
             }
+            // Answered doses show their answer in place of the buttons (issue #6).
+            binding.textStatus.isVisible = !isActionable
+            binding.textStatus.text = itemView.context.getString(statusRes)
+            binding.textStatus.setTextColor(
+                MaterialColors.getColor(
+                    binding.textStatus,
+                    when (dose.status) {
+                        Dose.Status.TAKEN -> com.google.android.material.R.attr.colorPrimary
+                        Dose.Status.MISSED -> com.google.android.material.R.attr.colorError
+                        else -> com.google.android.material.R.attr.colorOnSurfaceVariant
+                    }
+                )
+            )
+            binding.textStatus.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                if (dose.status == Dose.Status.TAKEN) R.drawable.ic_check else 0, 0, 0, 0
+            )
+            binding.textStatus.compoundDrawableTintList =
+                android.content.res.ColorStateList.valueOf(binding.textStatus.currentTextColor)
+
             binding.root.contentDescription = itemView.context.getString(
                 R.string.a11y_dose_card,
                 dose.medicationName,
