@@ -1,5 +1,7 @@
 # MediCheck Reminder
 
+[![Android CI](https://github.com/TlouPheme/medicheck-reminder/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/TlouPheme/medicheck-reminder/actions/workflows/android.yml)
+
 MediCheck Reminder is an Android app that helps a person take medication on schedule. They add each medication, receive a reminder at the scheduled time, and mark the dose taken, skipped, or snoozed. History shows those outcomes for the last 7 days, the last 30 days, or a custom range. The same app records weight, blood pressure, and blood sugar. The interface is available in English, isiZulu, and Afrikaans.
 
 Part 3 adds Google sign-in, offline mode with Firestore sync, a refill calculator, push notifications, an escalating full-screen alarm, and a profile photo. It also prepares the app for a Play Store release. Every change since the prototype is listed in [RELEASE_NOTES.md](RELEASE_NOTES.md), and the final version is tagged [`v1.0-final-poe`](https://github.com/TlouPheme/medicheck-reminder/releases/tag/v1.0-final-poe).
@@ -52,7 +54,8 @@ Sign-in failures are handled without a crash. A cancelled account picker simply 
 1. Create a Firebase project and add an Android app with package `com.example.medicheckreminder`.
 2. Add each developer's debug SHA-1 (`./gradlew signingReport`) and the release key's SHA-1.
 3. Enable **Authentication → Google** and **Authentication → Email/Password**, and create a Firestore database.
-4. Download `google-services.json` into `app/`. It is listed in `.gitignore`.
+4. Paste [`firestore.rules`](firestore.rules) into **Firestore → Rules** and publish them, before the test-mode rules expire.
+5. Download `google-services.json` into `app/`. It is listed in `.gitignore`.
 
 ## Offline mode and sync
 
@@ -101,7 +104,7 @@ This is Part 1's escalating reminder (FR-INN-01). If a dose reminder is not answ
 
 ## Profile photo
 
-Settings has a profile row. Tapping it opens the system photo picker. The chosen photo is shrunk on the phone to at most 512 px, uploaded as a JPEG to Firebase Storage at `profile_pictures/{uid}.jpg`, and its download URL is saved on `users/{uid}` in Firestore. The upload uses the signed-in Firebase user. [`storage.rules`](storage.rules) lets each user read and write only their own photo, as a JPEG under 2 MB.
+Settings has a profile row. Tapping it opens the system photo picker. The chosen photo is shrunk on the phone to at most 512 px, uploaded as a JPEG to Firebase Storage at `profile_pictures/{uid}.jpg`, and its download URL is saved on `users/{uid}` in Firestore. The upload uses the signed-in Firebase user. [`storage.rules`](storage.rules) lets each user read and write only their own photo, as a JPEG under 2 MB. Firebase Storage needs the Blaze plan, so the upload does not work on this project's free plan (see [Known limitations](#known-limitations)).
 
 ## Release and Play Store
 
@@ -129,14 +132,25 @@ How generative AI was used, and how its output was checked, is described in [doc
 
 ## GitHub
 
-Source is hosted at [github.com/TlouPheme/medicheck-reminder](https://github.com/TlouPheme/medicheck-reminder). `main` is the branch that holds the shared history. Each feature is built on its own branch (for example `feature/sso` or `feature/offline-sync`) and merged through a pull request that another member reviews. A pull request is not merged while the GitHub Actions build is red. The final submitted commit is tagged `v1.0-final-poe`.
+Source is hosted at [github.com/TlouPheme/medicheck-reminder](https://github.com/TlouPheme/medicheck-reminder). `main` is the branch that holds the shared history. Each Part 3 feature was built on its own branch and merged through a pull request:
+
+| Pull request | Branch | Area |
+| --- | --- | --- |
+| [#1](https://github.com/TlouPheme/medicheck-reminder/pull/1) | `feature/sso` | Google sign-in, unit tests, GitHub Actions |
+| [#2](https://github.com/TlouPheme/medicheck-reminder/pull/2) | `feature/profile-photo-ui` | Profile photo, launcher icon, store graphics |
+| [#3](https://github.com/TlouPheme/medicheck-reminder/pull/3) | `feature/offline-sync` | Offline mode with sync, refill calculator |
+| [#4](https://github.com/TlouPheme/medicheck-reminder/pull/4) | `feature/push-notifications` | Push notifications, full-screen alarm |
+| [#5](https://github.com/TlouPheme/medicheck-reminder/pull/5) | `feature/release-prep` | Signed release, store listing, device-testing fix |
+| [#10](https://github.com/TlouPheme/medicheck-reminder/pull/10) | `docs/final-wrap-up` | README and release notes |
+
+A pull request is merged only once its GitHub Actions build is green. The team rules also asked for another member to review each pull request. Because of the deadline, none of these pull requests has a recorded GitHub review. Bugs found while testing on a physical phone are tracked as [GitHub Issues](https://github.com/TlouPheme/medicheck-reminder/issues). The final submitted commit is tagged [`v1.0-final-poe`](https://github.com/TlouPheme/medicheck-reminder/releases/tag/v1.0-final-poe).
 
 ## GitHub Actions
 
 [`.github/workflows/android.yml`](.github/workflows/android.yml) runs on every push, on any branch, and on every pull request. The job:
 
 1. checks out the repository and sets up Temurin JDK 21 and Gradle caching;
-2. accepts the Android SDK licenses and installs the API 37 platform;
+2. sets up the Android SDK with `android-actions/setup-android` and installs the API 37 platform (`platforms;android-37.0`);
 3. runs the unit tests with `./gradlew :app:testDebugUnitTest`;
 4. builds the debug app with `./gradlew :app:assembleDebug`;
 5. uploads the test report and the debug APK as build artifacts.
@@ -145,7 +159,7 @@ A green run means the app compiles on a clean machine and every unit test passes
 
 ## Testing
 
-Unit tests live in [`app/src/test`](app/src/test) and run on the JVM:
+There are 66 unit tests in [`app/src/test`](app/src/test). They run on the JVM:
 
 | Test | Covers |
 | --- | --- |
