@@ -86,5 +86,5 @@ object SettingIds {
 
 
     const val SOUND_SILENT = "silent"
-    const val PRIVACY_URL = "https://www.medicheck.app/privacy"
+    const val PRIVACY_URL = "https://github.com/TlouPheme/medicheck-reminder/blob/main/docs/privacy-policy.md"
 }

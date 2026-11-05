@@ -56,6 +56,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/space_m" />
 
+            <TextView
+                android:id="@+id/text_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:drawablePadding="@dimen/space_xs"
+                android:gravity="center_vertical"
+                android:importantForAccessibility="no"
+                android:minHeight="@dimen/min_touch_target"
+                android:textAppearance="?attr/textAppearanceLabelLarge"
+                android:visibility="gone"
+                tools:text="@string/status_taken"
+                tools:visibility="visible" />
+
             <LinearLayout
                 android:id="@+id/layout_actions"
                 android:layout_width="match_parent"
